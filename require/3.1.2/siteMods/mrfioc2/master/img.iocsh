@@ -1,0 +1,23 @@
+#.img.iocsh
+
+# EVM img size: 11443722
+# EVR img size: 3011417 changed to 3011434
+# MTCA-EVR and PCIe FPGA: Kintex7 7K70T, bits=24,090,592 page=32 and in .bit size: 3011417
+
+# All flags:
+# DEV, EVM, EVR, BIN_RD, BIN_WR, IMG_FILE, PCIID
+# Example:
+# iocsh.bash -c 'epicsEnvSet PCIID 08:00.0'
+
+"$(EVM=#)"epicsEnvSet "BIN_SIZE" "11443722"
+"$(EVR=#)"epicsEnvSet "BIN_SIZE" "3011434"
+
+# If EVM update
+"$(EVM=#)"mrmEvgSetupPCI "$(DEV)" "$(PCIID)"
+# If EVR update:
+"$(EVR=#)"mrmEvrSetupPCI "$(DEV)" "$(PCIID)"
+
+"$(BIN_RD=#)"flashread  "$(DEV):FLASH,  0, $(BIN_SIZE), $(DEV)_bak.bin"
+"$(BIN_WR=#)"flashwrite "$(DEV):FLASH,  0, $(IMG_FILE)"
+
+# EOF

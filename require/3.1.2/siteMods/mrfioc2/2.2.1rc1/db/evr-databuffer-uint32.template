@@ -1,0 +1,7 @@
+# .template
+
+record(longin, "$(P)$(R=)$(PV)") {
+  field(DTYP, "Soft Channel")
+  field(INP, "$(P)$(R=)dbus-u32indx$(INDEX)-subA_ CPP")
+}
+#EOL

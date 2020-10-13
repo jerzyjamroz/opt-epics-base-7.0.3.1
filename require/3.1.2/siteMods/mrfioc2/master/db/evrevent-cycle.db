@@ -1,0 +1,35 @@
+# Cycle counter driven from hardware event code.
+#
+# Provides two counters with hardware timestamp.
+# One for current cycle, second is previous value of first.
+#
+# Macros:
+#  P = record name prefix
+#  C = Counter name
+#  EVR = EVR devObj name
+#  CODE = Event code (hardware)
+#
+
+# EVT  - Timing hardware event code
+# ENUM - EPICS DB event number
+record(longout, "$(PCNT)$(C)-SP_") {
+  field(DTYP, "EVR Event")
+  field(SCAN, "I/O Intr")
+  field(OUT , "@OBJ=$(EVR),Code=$(CODE)")
+  field(VAL , "-1")
+  field(TSE , "-2") # from device support
+  field(FLNK, "$(PCNT)$(C)Prev-I")
+}
+
+record(calc, "$(PCNT)$(C)-I") {
+  field(CALC, "A+1")
+  field(INPA, "$(PCNT)$(C)-I NPP")
+  field(TSEL, "$(PCNT)$(C)-SP_.TIME")
+}
+
+# Copy previous counter value and timestamp
+record(longin, "$(PCNT)$(C)Prev-I") {
+  field(INP , "$(PCNT)$(C)-I NPP")
+  field(TSEL, "$(PCNT)$(C)-I.TIME")
+  field(FLNK, "$(PCNT)$(C)-I")
+}

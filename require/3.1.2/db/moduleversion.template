@@ -1,0 +1,30 @@
+record (waveform, "$(REQUIRE_IOC):MODULES")
+{
+    field (DESC, "List of loaded modules")
+    field (FTVL, "STRING")
+    field (NELM, "$(MODULE_COUNT)")
+    field (PINI, "YES")
+}
+
+record (waveform, "$(REQUIRE_IOC):VERSIONS")
+{
+    field (DESC, "Versions of loaded modules")
+    field (FTVL, "STRING")
+    field (NELM, "$(MODULE_COUNT)")
+    field (PINI, "YES")
+}
+
+record (waveform, "$(REQUIRE_IOC):MOD_VER")
+{
+    field (DESC, "List of loaded modules")
+    field (FTVL, "CHAR")
+    field (NELM, "$(BUFFER_SIZE)")
+    field (PINI, "YES")
+}
+
+record (stringin, "$(REQUIRE_IOC):$(MODULE)_VER")
+{
+    field (DESC, "Module $(MODULE) version")
+    field (VAL,  "$(VERSION)")
+    field (PINI, "YES")
+}

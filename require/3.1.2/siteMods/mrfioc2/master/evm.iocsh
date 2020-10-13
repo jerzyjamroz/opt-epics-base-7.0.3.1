@@ -1,0 +1,8 @@
+# .init.iocsh
+# ===========
+
+mrmEvgSetupPCI "$(OBJ=EVM)" "$(PCIID)"
+
+dbLoadRecords "evm-mtca-300-ess.db" "P=$(P), OBJ=$(OBJ=EVM), FEVT=$(TS_CLK=88.0525), FRF=$(TS_CLK=88.0525), RFDIV=1, U=$(U=:EVRU-), D=$(D=:EVRD-)"
+
+#EOF

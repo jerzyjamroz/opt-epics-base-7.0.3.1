@@ -1,0 +1,493 @@
+# FRU 'presence' record to indicate whether FRU
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)P") {
+  field(DESC, "Module presence")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "MCHsensor")
+  field(INP, "#B$(_FRUID) C0 N0 @$(_SESS)+fpres")
+  field(ZNAM, "Not present")
+  field(ONAM, "Present")
+  field(PINI, "YES")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# # Vadatech 'hotswap' sensor, provides FRU M-state
+# record(mbbi, "$(_PREF):$(_ID)$(_UNIT)MSTATE") {
+#   field(SCAN, "10 second")
+# #  field(SCAN, "I/O Intr")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B$(_FRUID) C240 N1 @$(_SESS)+hs")
+#   field(ONVL, "0x01")
+#   field(ONST, "Not Installed")
+#   field(TWVL, "0x02")
+#   field(TWST, "Inactive")
+#   field(THVL, "0x04")
+#   field(THST, "Activation Request")
+#   field(FRVL, "0x08")
+#   field(FRST, "Activation In Progress")
+#   field(FVVL, "0x10")
+#   field(FVST, "Active")
+#   field(SXVL, "0x20")
+#   field(SXST, "Deactivation Request")
+#   field(SVVL, "0x40")
+#   field(SVST, "Deactivation In Progress")
+#   field(EIVL, "0x80")
+#   field(EIST, "Communication Lost")
+# }
+
+record(ai, "$(_PREF):$(_ID)$(_UNIT)FRUID") {
+  field(DESC, "Module type")
+  field(VAL,  "$(_FRUID)")
+  field(PINI, "YES")
+}
+
+record(stringin, "$(_PREF):$(_ID)$(_UNIT)BMANUF") {
+  field(DESC, "Board manufacturer")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B$(_FRUID) C0 N0  @$(_SESS)+bmf")
+  field(PINI, "YES")
+  field(FLNK, "$(_PREF):$(_ID)$(_UNIT)BPRODNAME")
+}
+
+record(stringin, "$(_PREF):$(_ID)$(_UNIT)BPRODNAME") {
+  field(DESC, "Board product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B$(_FRUID) C0 N0  @$(_SESS)+bp")
+  field(FLNK, "$(_PREF):$(_ID)$(_UNIT)BSN")
+}
+
+record(stringin, "$(_PREF):$(_ID)$(_UNIT)BSN") {
+  field(DESC, "Board serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B$(_FRUID) C0 N0  @$(_SESS)+bsn")
+  field(FLNK, "$(_PREF):$(_ID)$(_UNIT)BPARTNUMBER")
+}
+
+record(stringin, "$(_PREF):$(_ID)$(_UNIT)BPARTNUMBER") {
+  field(DESC, "Board part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B$(_FRUID) C0 N0  @$(_SESS)+bpn")
+  field(FLNK, "$(_PREF):$(_ID)$(_UNIT)PMANUF")
+}
+
+record(stringin, "$(_PREF):$(_ID)$(_UNIT)PMANUF") {
+  field(DESC, "Product manufacturer")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B$(_FRUID) C0 N0  @$(_SESS)+pmf")
+  field(FLNK, "$(_PREF):$(_ID)$(_UNIT)PPRODNAME")
+}
+
+record(stringin, "$(_PREF):$(_ID)$(_UNIT)PPRODNAME") {
+  field(DESC, "Product product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B$(_FRUID) C0 N0  @$(_SESS)+pp")
+  field(FLNK, "$(_PREF):$(_ID)$(_UNIT)PSN")
+}
+
+record(stringin, "$(_PREF):$(_ID)$(_UNIT)PSN") {
+  field(DESC, "Product serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B$(_FRUID) C0 N0  @$(_SESS)+psn")
+  field(FLNK, "$(_PREF):$(_ID)$(_UNIT)PPARTNUMBER")
+}
+
+record(stringin, "$(_PREF):$(_ID)$(_UNIT)PPARTNUMBER") {
+  field(DESC, "Product part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B$(_FRUID) C0 N0  @$(_SESS)+ppn")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# record(mbbo, "$(_PREF):$(_ID)$(_UNIT)POWERCTL") {
+#   field(DESC, "Payload power control")
+#   field(DTYP, "MCHsensor")
+#   field(OMSL, "supervisory")
+#   field(OUT, "#B$(_FRUID) C0 N0  @$(_SESS)+fru")
+#   field(ZRST, "Power off")
+#   field(ONST, "Power on")
+# #  reset not supported yet
+# #  field(TWST, "Hard reset")
+# }
+
+# record(ai, "$(_PREF):$(_ID)$(_UNIT)PWR") {
+#   field(DESC, "Steady state power draw")
+#   field(SCAN, "10 second")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B$(_FRUID) C0 N0  @$(_SESS)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(_PREF):$(_ID)$(_UNIT)PWRDES")
+# }
+
+# record(ai, "$(_PREF):$(_ID)$(_UNIT)PWRDES") {
+#   field(DESC, "Desired steady state power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B$(_FRUID) C1 N0  @$(_SESS)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(_PREF):$(_ID)$(_UNIT)EPWR")
+# }
+
+# record(ai, "$(_PREF):$(_ID)$(_UNIT)EPWR") {
+#   field(DESC, "Early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B$(_FRUID) C2 N0  @$(_SESS)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(_PREF):$(_ID)$(_UNIT)EPWRDES")
+# }
+
+# record(ai, "$(_PREF):$(_ID)$(_UNIT)EPWRDES") {
+#   field(DESC, "Desired early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B$(_FRUID) C3 N0  @$(_SESS)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(_PREF):$(_ID)$(_UNIT)PWRDLY")
+# }
+
+# record(ai, "$(_PREF):$(_ID)$(_UNIT)PWRDLY") {
+#   field(DESC, "FRU delay to stable power")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B$(_FRUID) C4 N0  @$(_SESS)+pwr")
+#   field(EGU, "s")
+#   field(FLNK, "$(_PREF):$(_ID)$(_UNIT)PWRDYN")
+# }
+
+
+# record(mbbi, "$(_PREF):$(_ID)$(_UNIT)PWRDYN")
+# {
+#   field(DESC, "FRU supports dynamic pwr reconfig")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B$(_FRUID) C0 N0  @$(_SESS)+pwr")
+#   field(ZRST, "No")
+#   field(ZRVL, "0")
+#   field(ONST, "Yes")
+#   field(ONVL, "1")
+# }
+#
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)PCBTTEMP-1")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C1 N1 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)PCBTTEMP-1P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)PCBTTEMP-1P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C1 N1 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)PCBBTEMP-2")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C1 N2 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)PCBBTEMP-2P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)PCBBTEMP-2P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C1 N2 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)CPUDTEMP-3")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C1 N3 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)CPUDTEMP-3P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)CPUDTEMP-3P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C1 N3 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)CPUSTEMP-4")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C1 N4 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)CPUSTEMP-4P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)CPUSTEMP-4P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C1 N4 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)VAA1V0V-1")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N1 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)VAA1V0V-1P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)VAA1V0V-1P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N1 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)VAA1V2V-2")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N2 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)VAA1V2V-2P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)VAA1V2V-2P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N2 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)VAA1V35V-3")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N3 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)VAA1V35V-3P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)VAA1V35V-3P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N3 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)VAA1V8V-4")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N4 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)VAA1V8V-4P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)VAA1V8V-4P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N4 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)VBB1V0V-5")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N5 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)VBB1V0V-5P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)VBB1V0V-5P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N5 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)VCC1V0V-6")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N6 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)VCC1V0V-6P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)VCC1V0V-6P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N6 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)VCC1V35V-7")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N7 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)VCC1V35V-7P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)VCC1V35V-7P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N7 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(_PREF):$(_ID)$(_UNIT)FPGACORV-8")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N8 @$(_SESS)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(_PREF):$(_ID)$(_UNIT)FPGACORV-8P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(_PREF):$(_ID)$(_UNIT)FPGACORV-8P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B$(_FRUID) C2 N8 @$(_SESS)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}

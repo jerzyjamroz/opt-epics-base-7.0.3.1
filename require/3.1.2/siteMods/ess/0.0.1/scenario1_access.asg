@@ -1,0 +1,16 @@
+# 1. Anyone can have read access to all fields at anytime
+# 2. 
+UAG(ics)    {iocuser}
+UAG(icsSup) {$(SUPER_IOCUSER)}
+HAG(icslab) {icslab*}
+HAG(ioc) {ioc*}
+
+ASG(DEFAULT) {
+   RULE(1,READ)
+   RULE(1,WRITE,TRAPWRITE) {
+       UAG(icsSup)
+       HAG(icslab)
+       HAG(ioc)
+   }
+}
+

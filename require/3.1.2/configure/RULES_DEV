@@ -1,0 +1,57 @@
+# -*- mode: Makefile;-*-
+
+.PHONY: devvars devenv devinit devbuild devclean devinstall devrebuild devuninstall devdistclean devepics devepics-clean devepics-distclean devpatch devpatchrevert devexistent devdep devvers
+
+devvars: vars
+
+devenv: devvars
+
+devinit: git-submodule-sync
+	git clone $(E3_MODULE_DEV_GITURL) $(E3_MODULE_SRC_PATH)
+	cd $(E3_MODULE_SRC_PATH) && git checkout $(EPICS_MODULE_TAG)
+
+
+ifeq "$(INIT_E3_MODULE_SRC)" "1"
+
+devbuild: nonexists
+devclean: nonexists
+devinstall: nonexists
+devrebuild: nonexists
+devuninstall: nonexists
+devdistclean: nonexists
+devepics: nonexists
+devepics-clean: nonexists
+devepics-distclean: nonexists
+devpatch: nonexists
+devpatchrevert: nonexists
+devexistent: nonexists
+devdep: nonexists
+devvers: nonexists
+nonexists:
+	$(QUIET)echo ""
+	$(QUIET)echo "------------------------------------------------------------"
+	$(QUIET)echo "          Could not find $(E3_MODULE_SRC_PATH) "
+	$(QUIET)echo "          Please make devinit first !          "
+	$(QUIET)echo "------------------------------------------------------------"
+	$(QUIET)echo ""
+else
+
+devbuild: build
+devclean: clean
+devinstall: install
+devrebuild: rebuild
+devuninstall: uninstall
+devdistclean: clean
+	$(QUIET)echo "Removing $(E3_MODULE_SRC_PATH) ......... "
+	$(SUDO) rm -rf $(E3_MODULE_SRC_PATH)
+devepics: epics
+devepics-clean: epics-clean
+devepics-distclean: epics-distclean
+devpatch: patch
+devpatchrevert: patchrevert
+devexistent: existent
+devdep: dep
+devvers: vers
+endif
+
+

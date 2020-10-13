@@ -1,0 +1,21 @@
+#- ###               ASG  iocsh                   ###
+#- ########################################$###########
+#- >> Mandatory
+#- ASG_PATH       - FULL_PATH_TO_ACCESS_SECURITY
+#- ASG_FILE       - ASG_FILENAME
+#- >> Optional
+#- ASG_SUBS       - macro substitution,  Default : 
+#- #########################################$##########
+
+epicsEnvSet(ASG_FULL_PATH_TO_ACCESS_SECURITY, "$(ASG_PATH)")
+epicsEnvSet(ASG_FILENAME, "$(ASG_FILE)")
+epicsEnvSet(ASG_SET_SUBSTITUTIONS_STRINGS, "$(ASG_SUBS=)")
+
+
+asSetFilename("$(ASG_FULL_PATH_TO_ACCESS_SECURITY)/$(ASG_FILENAME)")
+asSetSubstitutions("$(ASG_SET_SUBSTITUTIONS_STRINGS)")
+# require has afterInit function
+afterInit("asInit()")
+
+
+

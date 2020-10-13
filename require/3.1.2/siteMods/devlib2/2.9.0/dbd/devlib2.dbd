@@ -1,0 +1,7 @@
+registrar(devLibPCIIOCSH)
+registrar(devLibPCIRegisterBaseDefault)
+registrar(pcish)
+variable(devPCIDebug,int)
+registrar(vmecsr)
+registrar(vmesh)
+registrar(devReplaceVirtualOS)

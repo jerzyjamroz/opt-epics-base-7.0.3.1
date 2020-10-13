@@ -1,0 +1,1378 @@
+# FRU 'presence' record to indicate whether FRU
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCHCM$(unit)P") {
+  field(DESC, "Module presence")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "MCHsensor")
+  field(INP, "#B0 C0 N0 @$(link)+fpres")
+  field(ZNAM, "Not present")
+  field(ONAM, "Present")
+  field(PINI, "YES")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# # Vadatech 'hotswap' sensor, provides FRU M-state
+# record(mbbi, "$(dev):MCHCM$(unit)MSTATE") {
+#   field(SCAN, "10 second")
+# #  field(SCAN, "I/O Intr")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B0 C240 N1 @$(link)+hs")
+#   field(ONVL, "0x01")
+#   field(ONST, "Not Installed")
+#   field(TWVL, "0x02")
+#   field(TWST, "Inactive")
+#   field(THVL, "0x04")
+#   field(THST, "Activation Request")
+#   field(FRVL, "0x08")
+#   field(FRST, "Activation In Progress")
+#   field(FVVL, "0x10")
+#   field(FVST, "Active")
+#   field(SXVL, "0x20")
+#   field(SXST, "Deactivation Request")
+#   field(SVVL, "0x40")
+#   field(SVST, "Deactivation In Progress")
+#   field(EIVL, "0x80")
+#   field(EIST, "Communication Lost")
+# }
+
+record(ai, "$(dev):MCHCM$(unit)FRUID") {
+  field(DESC, "Module type")
+  field(VAL,  "0")
+  field(PINI, "YES")
+}
+
+record(stringin, "$(dev):MCHCM$(unit)BMANUF") {
+  field(DESC, "Board manufacturer")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B0 C0 N0  @$(link)+bmf")
+  field(PINI, "YES")
+  field(FLNK, "$(dev):MCHCM$(unit)BPRODNAME")
+}
+
+record(stringin, "$(dev):MCHCM$(unit)BPRODNAME") {
+  field(DESC, "Board product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B0 C0 N0  @$(link)+bp")
+  field(FLNK, "$(dev):MCHCM$(unit)BSN")
+}
+
+record(stringin, "$(dev):MCHCM$(unit)BSN") {
+  field(DESC, "Board serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B0 C0 N0  @$(link)+bsn")
+  field(FLNK, "$(dev):MCHCM$(unit)BPARTNUMBER")
+}
+
+record(stringin, "$(dev):MCHCM$(unit)BPARTNUMBER") {
+  field(DESC, "Board part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B0 C0 N0  @$(link)+bpn")
+  field(FLNK, "$(dev):MCHCM$(unit)PMANUF")
+}
+
+record(stringin, "$(dev):MCHCM$(unit)PMANUF") {
+  field(DESC, "Product manufacturer")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B0 C0 N0  @$(link)+pmf")
+  field(FLNK, "$(dev):MCHCM$(unit)PPRODNAME")
+}
+
+record(stringin, "$(dev):MCHCM$(unit)PPRODNAME") {
+  field(DESC, "Product product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B0 C0 N0  @$(link)+pp")
+  field(FLNK, "$(dev):MCHCM$(unit)PSN")
+}
+
+record(stringin, "$(dev):MCHCM$(unit)PSN") {
+  field(DESC, "Product serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B0 C0 N0  @$(link)+psn")
+  field(FLNK, "$(dev):MCHCM$(unit)PPARTNUMBER")
+}
+
+record(stringin, "$(dev):MCHCM$(unit)PPARTNUMBER") {
+  field(DESC, "Product part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B0 C0 N0  @$(link)+ppn")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# record(mbbo, "$(dev):MCHCM$(unit)POWERCTL") {
+#   field(DESC, "Payload power control")
+#   field(DTYP, "MCHsensor")
+#   field(OMSL, "supervisory")
+#   field(OUT, "#B0 C0 N0  @$(link)+fru")
+#   field(ZRST, "Power off")
+#   field(ONST, "Power on")
+# #  reset not supported yet
+# #  field(TWST, "Hard reset")
+# }
+
+# record(ai, "$(dev):MCHCM$(unit)PWR") {
+#   field(DESC, "Steady state power draw")
+#   field(SCAN, "10 second")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B0 C0 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):MCHCM$(unit)PWRDES")
+# }
+
+# record(ai, "$(dev):MCHCM$(unit)PWRDES") {
+#   field(DESC, "Desired steady state power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B0 C1 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):MCHCM$(unit)EPWR")
+# }
+
+# record(ai, "$(dev):MCHCM$(unit)EPWR") {
+#   field(DESC, "Early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B0 C2 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):MCHCM$(unit)EPWRDES")
+# }
+
+# record(ai, "$(dev):MCHCM$(unit)EPWRDES") {
+#   field(DESC, "Desired early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B0 C3 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):MCHCM$(unit)PWRDLY")
+# }
+
+# record(ai, "$(dev):MCHCM$(unit)PWRDLY") {
+#   field(DESC, "FRU delay to stable power")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B0 C4 N0  @$(link)+pwr")
+#   field(EGU, "s")
+#   field(FLNK, "$(dev):MCHCM$(unit)PWRDYN")
+# }
+
+
+# record(mbbi, "$(dev):MCHCM$(unit)PWRDYN")
+# {
+#   field(DESC, "FRU supports dynamic pwr reconfig")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B0 C0 N0  @$(link)+pwr")
+#   field(ZRST, "No")
+#   field(ZRVL, "0")
+#   field(ONST, "Yes")
+#   field(ONVL, "1")
+# }
+#
+# FRU 'presence' record to indicate whether FRU
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCH$(unit)P") {
+  field(DESC, "Module presence")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "MCHsensor")
+  field(INP, "#B3 C0 N0 @$(link)+fpres")
+  field(ZNAM, "Not present")
+  field(ONAM, "Present")
+  field(PINI, "YES")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# # Vadatech 'hotswap' sensor, provides FRU M-state
+# record(mbbi, "$(dev):MCH$(unit)MSTATE") {
+#   field(SCAN, "10 second")
+# #  field(SCAN, "I/O Intr")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B3 C240 N1 @$(link)+hs")
+#   field(ONVL, "0x01")
+#   field(ONST, "Not Installed")
+#   field(TWVL, "0x02")
+#   field(TWST, "Inactive")
+#   field(THVL, "0x04")
+#   field(THST, "Activation Request")
+#   field(FRVL, "0x08")
+#   field(FRST, "Activation In Progress")
+#   field(FVVL, "0x10")
+#   field(FVST, "Active")
+#   field(SXVL, "0x20")
+#   field(SXST, "Deactivation Request")
+#   field(SVVL, "0x40")
+#   field(SVST, "Deactivation In Progress")
+#   field(EIVL, "0x80")
+#   field(EIST, "Communication Lost")
+# }
+
+record(ai, "$(dev):MCH$(unit)FRUID") {
+  field(DESC, "Module type")
+  field(VAL,  "3")
+  field(PINI, "YES")
+}
+
+record(stringin, "$(dev):MCH$(unit)BMANUF") {
+  field(DESC, "Board manufacturer")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B3 C0 N0  @$(link)+bmf")
+  field(PINI, "YES")
+  field(FLNK, "$(dev):MCH$(unit)BPRODNAME")
+}
+
+record(stringin, "$(dev):MCH$(unit)BPRODNAME") {
+  field(DESC, "Board product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B3 C0 N0  @$(link)+bp")
+  field(FLNK, "$(dev):MCH$(unit)BSN")
+}
+
+record(stringin, "$(dev):MCH$(unit)BSN") {
+  field(DESC, "Board serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B3 C0 N0  @$(link)+bsn")
+  field(FLNK, "$(dev):MCH$(unit)BPARTNUMBER")
+}
+
+record(stringin, "$(dev):MCH$(unit)BPARTNUMBER") {
+  field(DESC, "Board part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B3 C0 N0  @$(link)+bpn")
+  field(FLNK, "$(dev):MCH$(unit)PMANUF")
+}
+
+record(stringin, "$(dev):MCH$(unit)PMANUF") {
+  field(DESC, "Product manufacturer")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B3 C0 N0  @$(link)+pmf")
+  field(FLNK, "$(dev):MCH$(unit)PPRODNAME")
+}
+
+record(stringin, "$(dev):MCH$(unit)PPRODNAME") {
+  field(DESC, "Product product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B3 C0 N0  @$(link)+pp")
+  field(FLNK, "$(dev):MCH$(unit)PSN")
+}
+
+record(stringin, "$(dev):MCH$(unit)PSN") {
+  field(DESC, "Product serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B3 C0 N0  @$(link)+psn")
+  field(FLNK, "$(dev):MCH$(unit)PPARTNUMBER")
+}
+
+record(stringin, "$(dev):MCH$(unit)PPARTNUMBER") {
+  field(DESC, "Product part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B3 C0 N0  @$(link)+ppn")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# record(mbbo, "$(dev):MCH$(unit)POWERCTL") {
+#   field(DESC, "Payload power control")
+#   field(DTYP, "MCHsensor")
+#   field(OMSL, "supervisory")
+#   field(OUT, "#B3 C0 N0  @$(link)+fru")
+#   field(ZRST, "Power off")
+#   field(ONST, "Power on")
+# #  reset not supported yet
+# #  field(TWST, "Hard reset")
+# }
+
+# record(ai, "$(dev):MCH$(unit)PWR") {
+#   field(DESC, "Steady state power draw")
+#   field(SCAN, "10 second")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B3 C0 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):MCH$(unit)PWRDES")
+# }
+
+# record(ai, "$(dev):MCH$(unit)PWRDES") {
+#   field(DESC, "Desired steady state power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B3 C1 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):MCH$(unit)EPWR")
+# }
+
+# record(ai, "$(dev):MCH$(unit)EPWR") {
+#   field(DESC, "Early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B3 C2 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):MCH$(unit)EPWRDES")
+# }
+
+# record(ai, "$(dev):MCH$(unit)EPWRDES") {
+#   field(DESC, "Desired early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B3 C3 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):MCH$(unit)PWRDLY")
+# }
+
+# record(ai, "$(dev):MCH$(unit)PWRDLY") {
+#   field(DESC, "FRU delay to stable power")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B3 C4 N0  @$(link)+pwr")
+#   field(EGU, "s")
+#   field(FLNK, "$(dev):MCH$(unit)PWRDYN")
+# }
+
+
+# record(mbbi, "$(dev):MCH$(unit)PWRDYN")
+# {
+#   field(DESC, "FRU supports dynamic pwr reconfig")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B3 C0 N0  @$(link)+pwr")
+#   field(ZRST, "No")
+#   field(ZRVL, "0")
+#   field(ONST, "Yes")
+#   field(ONVL, "1")
+# }
+#
+# FRU 'presence' record to indicate whether FRU
+# is active; used by edm visibility rules
+record(bi, "$(dev):CLK$(unit)P") {
+  field(DESC, "Module presence")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "MCHsensor")
+  field(INP, "#B60 C0 N0 @$(link)+fpres")
+  field(ZNAM, "Not present")
+  field(ONAM, "Present")
+  field(PINI, "YES")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# # Vadatech 'hotswap' sensor, provides FRU M-state
+# record(mbbi, "$(dev):CLK$(unit)MSTATE") {
+#   field(SCAN, "10 second")
+# #  field(SCAN, "I/O Intr")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B60 C240 N1 @$(link)+hs")
+#   field(ONVL, "0x01")
+#   field(ONST, "Not Installed")
+#   field(TWVL, "0x02")
+#   field(TWST, "Inactive")
+#   field(THVL, "0x04")
+#   field(THST, "Activation Request")
+#   field(FRVL, "0x08")
+#   field(FRST, "Activation In Progress")
+#   field(FVVL, "0x10")
+#   field(FVST, "Active")
+#   field(SXVL, "0x20")
+#   field(SXST, "Deactivation Request")
+#   field(SVVL, "0x40")
+#   field(SVST, "Deactivation In Progress")
+#   field(EIVL, "0x80")
+#   field(EIST, "Communication Lost")
+# }
+
+record(ai, "$(dev):CLK$(unit)FRUID") {
+  field(DESC, "Module type")
+  field(VAL,  "60")
+  field(PINI, "YES")
+}
+
+record(stringin, "$(dev):CLK$(unit)BMANUF") {
+  field(DESC, "Board manufacturer")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B60 C0 N0  @$(link)+bmf")
+  field(PINI, "YES")
+  field(FLNK, "$(dev):CLK$(unit)BPRODNAME")
+}
+
+record(stringin, "$(dev):CLK$(unit)BPRODNAME") {
+  field(DESC, "Board product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B60 C0 N0  @$(link)+bp")
+  field(FLNK, "$(dev):CLK$(unit)BSN")
+}
+
+record(stringin, "$(dev):CLK$(unit)BSN") {
+  field(DESC, "Board serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B60 C0 N0  @$(link)+bsn")
+  field(FLNK, "$(dev):CLK$(unit)BPARTNUMBER")
+}
+
+record(stringin, "$(dev):CLK$(unit)BPARTNUMBER") {
+  field(DESC, "Board part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B60 C0 N0  @$(link)+bpn")
+  field(FLNK, "$(dev):CLK$(unit)PMANUF")
+}
+
+record(stringin, "$(dev):CLK$(unit)PMANUF") {
+  field(DESC, "Product manufacturer")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B60 C0 N0  @$(link)+pmf")
+  field(FLNK, "$(dev):CLK$(unit)PPRODNAME")
+}
+
+record(stringin, "$(dev):CLK$(unit)PPRODNAME") {
+  field(DESC, "Product product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B60 C0 N0  @$(link)+pp")
+  field(FLNK, "$(dev):CLK$(unit)PSN")
+}
+
+record(stringin, "$(dev):CLK$(unit)PSN") {
+  field(DESC, "Product serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B60 C0 N0  @$(link)+psn")
+  field(FLNK, "$(dev):CLK$(unit)PPARTNUMBER")
+}
+
+record(stringin, "$(dev):CLK$(unit)PPARTNUMBER") {
+  field(DESC, "Product part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B60 C0 N0  @$(link)+ppn")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# record(mbbo, "$(dev):CLK$(unit)POWERCTL") {
+#   field(DESC, "Payload power control")
+#   field(DTYP, "MCHsensor")
+#   field(OMSL, "supervisory")
+#   field(OUT, "#B60 C0 N0  @$(link)+fru")
+#   field(ZRST, "Power off")
+#   field(ONST, "Power on")
+# #  reset not supported yet
+# #  field(TWST, "Hard reset")
+# }
+
+# record(ai, "$(dev):CLK$(unit)PWR") {
+#   field(DESC, "Steady state power draw")
+#   field(SCAN, "10 second")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B60 C0 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):CLK$(unit)PWRDES")
+# }
+
+# record(ai, "$(dev):CLK$(unit)PWRDES") {
+#   field(DESC, "Desired steady state power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B60 C1 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):CLK$(unit)EPWR")
+# }
+
+# record(ai, "$(dev):CLK$(unit)EPWR") {
+#   field(DESC, "Early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B60 C2 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):CLK$(unit)EPWRDES")
+# }
+
+# record(ai, "$(dev):CLK$(unit)EPWRDES") {
+#   field(DESC, "Desired early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B60 C3 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):CLK$(unit)PWRDLY")
+# }
+
+# record(ai, "$(dev):CLK$(unit)PWRDLY") {
+#   field(DESC, "FRU delay to stable power")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B60 C4 N0  @$(link)+pwr")
+#   field(EGU, "s")
+#   field(FLNK, "$(dev):CLK$(unit)PWRDYN")
+# }
+
+
+# record(mbbi, "$(dev):CLK$(unit)PWRDYN")
+# {
+#   field(DESC, "FRU supports dynamic pwr reconfig")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B60 C0 N0  @$(link)+pwr")
+#   field(ZRST, "No")
+#   field(ZRVL, "0")
+#   field(ONST, "Yes")
+#   field(ONVL, "1")
+# }
+#
+# FRU 'presence' record to indicate whether FRU
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)P") {
+  field(DESC, "Module presence")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "MCHsensor")
+  field(INP, "#B61 C0 N0 @$(link)+fpres")
+  field(ZNAM, "Not present")
+  field(ONAM, "Present")
+  field(PINI, "YES")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# # Vadatech 'hotswap' sensor, provides FRU M-state
+# record(mbbi, "$(dev):HUB$(unit)MSTATE") {
+#   field(SCAN, "10 second")
+# #  field(SCAN, "I/O Intr")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B61 C240 N1 @$(link)+hs")
+#   field(ONVL, "0x01")
+#   field(ONST, "Not Installed")
+#   field(TWVL, "0x02")
+#   field(TWST, "Inactive")
+#   field(THVL, "0x04")
+#   field(THST, "Activation Request")
+#   field(FRVL, "0x08")
+#   field(FRST, "Activation In Progress")
+#   field(FVVL, "0x10")
+#   field(FVST, "Active")
+#   field(SXVL, "0x20")
+#   field(SXST, "Deactivation Request")
+#   field(SVVL, "0x40")
+#   field(SVST, "Deactivation In Progress")
+#   field(EIVL, "0x80")
+#   field(EIST, "Communication Lost")
+# }
+
+record(ai, "$(dev):HUB$(unit)FRUID") {
+  field(DESC, "Module type")
+  field(VAL,  "61")
+  field(PINI, "YES")
+}
+
+record(stringin, "$(dev):HUB$(unit)BMANUF") {
+  field(DESC, "Board manufacturer")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B61 C0 N0  @$(link)+bmf")
+  field(PINI, "YES")
+  field(FLNK, "$(dev):HUB$(unit)BPRODNAME")
+}
+
+record(stringin, "$(dev):HUB$(unit)BPRODNAME") {
+  field(DESC, "Board product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B61 C0 N0  @$(link)+bp")
+  field(FLNK, "$(dev):HUB$(unit)BSN")
+}
+
+record(stringin, "$(dev):HUB$(unit)BSN") {
+  field(DESC, "Board serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B61 C0 N0  @$(link)+bsn")
+  field(FLNK, "$(dev):HUB$(unit)BPARTNUMBER")
+}
+
+record(stringin, "$(dev):HUB$(unit)BPARTNUMBER") {
+  field(DESC, "Board part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B61 C0 N0  @$(link)+bpn")
+  field(FLNK, "$(dev):HUB$(unit)PMANUF")
+}
+
+record(stringin, "$(dev):HUB$(unit)PMANUF") {
+  field(DESC, "Product manufacturer")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B61 C0 N0  @$(link)+pmf")
+  field(FLNK, "$(dev):HUB$(unit)PPRODNAME")
+}
+
+record(stringin, "$(dev):HUB$(unit)PPRODNAME") {
+  field(DESC, "Product product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B61 C0 N0  @$(link)+pp")
+  field(FLNK, "$(dev):HUB$(unit)PSN")
+}
+
+record(stringin, "$(dev):HUB$(unit)PSN") {
+  field(DESC, "Product serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B61 C0 N0  @$(link)+psn")
+  field(FLNK, "$(dev):HUB$(unit)PPARTNUMBER")
+}
+
+record(stringin, "$(dev):HUB$(unit)PPARTNUMBER") {
+  field(DESC, "Product part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B61 C0 N0  @$(link)+ppn")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# record(mbbo, "$(dev):HUB$(unit)POWERCTL") {
+#   field(DESC, "Payload power control")
+#   field(DTYP, "MCHsensor")
+#   field(OMSL, "supervisory")
+#   field(OUT, "#B61 C0 N0  @$(link)+fru")
+#   field(ZRST, "Power off")
+#   field(ONST, "Power on")
+# #  reset not supported yet
+# #  field(TWST, "Hard reset")
+# }
+
+# record(ai, "$(dev):HUB$(unit)PWR") {
+#   field(DESC, "Steady state power draw")
+#   field(SCAN, "10 second")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B61 C0 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):HUB$(unit)PWRDES")
+# }
+
+# record(ai, "$(dev):HUB$(unit)PWRDES") {
+#   field(DESC, "Desired steady state power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B61 C1 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):HUB$(unit)EPWR")
+# }
+
+# record(ai, "$(dev):HUB$(unit)EPWR") {
+#   field(DESC, "Early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B61 C2 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):HUB$(unit)EPWRDES")
+# }
+
+# record(ai, "$(dev):HUB$(unit)EPWRDES") {
+#   field(DESC, "Desired early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B61 C3 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):HUB$(unit)PWRDLY")
+# }
+
+# record(ai, "$(dev):HUB$(unit)PWRDLY") {
+#   field(DESC, "FRU delay to stable power")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B61 C4 N0  @$(link)+pwr")
+#   field(EGU, "s")
+#   field(FLNK, "$(dev):HUB$(unit)PWRDYN")
+# }
+
+
+# record(mbbi, "$(dev):HUB$(unit)PWRDYN")
+# {
+#   field(DESC, "FRU supports dynamic pwr reconfig")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B61 C0 N0  @$(link)+pwr")
+#   field(ZRST, "No")
+#   field(ZRVL, "0")
+#   field(ONST, "Yes")
+#   field(ONVL, "1")
+# }
+#
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):MCH$(unit)CPUTEMP-1")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C1 N1 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):MCH$(unit)CPUTEMP-1P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCH$(unit)CPUTEMP-1P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C1 N1 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):MCH$(unit)IOTEMP-2")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C1 N2 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):MCH$(unit)IOTEMP-2P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCH$(unit)IOTEMP-2P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C1 N2 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):MCH$(unit)BA1d2V-1")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N1 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):MCH$(unit)BA1d2V-1P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCH$(unit)BA1d2V-1P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N1 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):MCH$(unit)BA1d5V-2")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N2 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):MCH$(unit)BA1d5V-2P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCH$(unit)BA1d5V-2P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N2 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):MCH$(unit)BA1d8V-3")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N3 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):MCH$(unit)BA1d8V-3P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCH$(unit)BA1d8V-3P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N3 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):MCH$(unit)BA2d5V-4")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N4 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):MCH$(unit)BA2d5V-4P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCH$(unit)BA2d5V-4P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N4 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):MCH$(unit)BA3d3V-5")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N5 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):MCH$(unit)BA3d3V-5P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCH$(unit)BA3d3V-5P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N5 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):MCH$(unit)BA12V-6")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N6 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):MCH$(unit)BA12V-6P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCH$(unit)BA12V-6P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C2 N6 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):MCH$(unit)BASEI-1")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C3 N1 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):MCH$(unit)BASEI-1P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):MCH$(unit)BASEI-1P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B3 C3 N1 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):CLK$(unit)DTEMP-1")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C1 N1 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):CLK$(unit)DTEMP-1P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):CLK$(unit)DTEMP-1P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C1 N1 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):CLK$(unit)DMAXTEMP-2")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C1 N2 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):CLK$(unit)DMAXTEMP-2P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):CLK$(unit)DMAXTEMP-2P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C1 N2 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):CLK$(unit)MTEMP-3")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C1 N3 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):CLK$(unit)MTEMP-3P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):CLK$(unit)MTEMP-3P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C1 N3 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):CLK$(unit)MMAXTEMP-4")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C1 N4 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):CLK$(unit)MMAXTEMP-4P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):CLK$(unit)MMAXTEMP-4P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C1 N4 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):CLK$(unit)3d3V-1")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C2 N1 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):CLK$(unit)3d3V-1P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):CLK$(unit)3d3V-1P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C2 N1 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):CLK$(unit)12V-2")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C2 N2 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):CLK$(unit)12V-2P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):CLK$(unit)12V-2P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B60 C2 N2 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)DTEMP-1")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N1 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)DTEMP-1P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)DTEMP-1P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N1 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)DMAXTEMP-2")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N2 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)DMAXTEMP-2P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)DMAXTEMP-2P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N2 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)STEMP-3")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N3 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)STEMP-3P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)STEMP-3P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N3 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)SMAXTEMP-4")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N4 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)SMAXTEMP-4P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)SMAXTEMP-4P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N4 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)PTEMP-5")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N5 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)PTEMP-5P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)PTEMP-5P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N5 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)PMAXTEMP-6")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N6 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)PMAXTEMP-6P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)PMAXTEMP-6P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C1 N6 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)d9V-1")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C2 N1 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)d9V-1P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)d9V-1P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C2 N1 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)d9AnaV-2")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C2 N2 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)d9AnaV-2P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)d9AnaV-2P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C2 N2 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)1d8V-3")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C2 N3 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)1d8V-3P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)1d8V-3P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C2 N3 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)3d3V-4")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C2 N4 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)3d3V-4P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)3d3V-4P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C2 N4 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}
+# ai sensor record
+# DESC, EGU set by device support
+record(ai, "$(dev):HUB$(unit)12V-5")
+{
+    field(DESC, "")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C2 N5 @$(link)+sens")
+    field(PREC, "1")
+    field(SDIS, "$(dev):HUB$(unit)12V-5P.SEVR")
+    field(DISV, "2")
+    field(PINI, "YES")
+}
+
+# sensor 'presence' record to indicate whether sensor 
+# is active; used by edm visibility rules
+record(bi, "$(dev):HUB$(unit)12V-5P")
+{
+    field(DESC, "Sensor presence")
+    field(SCAN, "I/O Intr")
+    field(DTYP, "MCHsensor")
+    field(INP, "#B61 C2 N5 @$(link)+spres")
+    field(ZNAM, "Not present")
+    field(ZSV,  "MAJOR")
+    field(ONAM, "Present")
+    field(PINI, "YES")
+}

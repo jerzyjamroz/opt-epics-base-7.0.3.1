@@ -1,0 +1,24 @@
+#- ###   ESS MTCA EVR 300   Configuration iocsh     ###
+#- ####################################################
+#- >> Mandatory
+#- PCIID          - PCI Address 
+#- DEV            - Device Name for EVR (used in mrfioc2 device support layer)
+#- P, R,          - Macros used for the record names 
+#- S              - Separator (optional)
+#-                      $(P)$(R)$(S=:)Signal-SD
+#                       $(P)$(R)$(S=:)SubDev-Signal-SD
+#-                  
+#-                  
+#- >> Optional
+#- EVTCLOCKRATE   - Event Clock Rate, ESS 88.0525
+#  RT             - software timestamp source w/o RT thread scheduling
+#                   wtRT : diable software timestamp source
+#                   woRT : Default, enable it. 
+#- ####################################################
+#-
+mrmEvrSetupPCI("$(DEV)",  "$(PCIID)")
+dbLoadRecords("evr-mtca-300u-ess.db","P=$(P), R=$(R=), S=$(S=:), OBJ=$(DEV), FEVT=$(EVTCLOCKRATE=88.0525)")
+iocshRun('$(SWTIMESTAMP_$(RT=woRT)=) var(evrMrmTimeNSOverflowThreshold, 100000)', "SWTIMESTAMP_wtRT=#") 
+#-
+#- Don't forget the new line
+

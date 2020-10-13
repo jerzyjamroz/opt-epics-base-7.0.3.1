@@ -1,0 +1,58 @@
+# .run.iocsh
+# ==========
+
+# ESS EVG command file for mrfioc2
+# ================================
+# The file runs the EVG functionality.
+# ====================================
+# Set EVM as master (EVG) and run sequences
+dbpf $(IOC)-$(DEV):Enable-Sel "Ena Master"
+
+# Select the RF input
+$(INTREF=#)dbpf $(IOC)-$(DEV):EvtClk-Source-Sel "FracSyn (Int)"
+# Dute to a bug, RF (Ext) cannot be applied twice as it blocks EVG (reboot required)
+$(EXTREF=#)dbpf $(IOC)-$(DEV):EvtClk-Source-Sel "RF (Ext)"
+# PLL needs time in order to synchronize
+epicsThreadSleep 1
+
+# Change to PPS once connected
+$(EXTREF=#)dbpf $(IOC)-$(DEV):1ppsInp-Sel "Front0"
+$(EXTREF=#)dbpf $(IOC)-$(DEV):1ppsInp-MbbiDir_.TPRO 1
+$(EXTREF=#)dbpf $(IOC)-$(DEV):TrigEvt4-TrigSrc-Sel "Front0"
+$(EXTREF=#)dbpf $(IOC)-$(DEV):TrigEvt4-EvtCode-SP $(EVT_PPS)
+$(INTREF=#)dbpf $(IOC)-$(DEV):1ppsInp-Sel "Sys Clk"
+
+epicsThreadSleep 1
+
+dbpf $(IOC)-$(DEV):SyncTimestamp-Cmd 1
+
+# Basic sequencer0 setup
+dbpf $(IOC)-$(DEV):SoftSeq0-RunMode-Sel "Normal"
+dbpf $(IOC)-$(DEV):SoftSeq0-TrigSrc-Sel "Mxc0"
+dbpf $(IOC)-$(DEV):SoftSeq0-TsResolution-Sel "uSec"
+
+# Basic sequencer1 setup
+dbpf $(IOC)-$(DEV):SoftSeq1-RunMode-Sel "Normal"
+dbpf $(IOC)-$(DEV):SoftSeq1-TrigSrc-Sel "Mxc0"
+dbpf $(IOC)-$(DEV):SoftSeq1-TsResolution-Sel "uSec"
+
+# Basic sequencer2 setup
+dbpf $(IOC)-$(DEV):SoftSeq2-RunMode-Sel "Normal"
+dbpf $(IOC)-$(DEV):SoftSeq2-TrigSrc-Sel "Mxc0"
+dbpf $(IOC)-$(DEV):SoftSeq2-TsResolution-Sel "uSec"
+
+# Master Event Rate 14 Hz
+dbpf $(IOC)-$(DEV):Mxc0-Polarity-Sel "Orginal"
+dbpf $(IOC)-$(DEV):Mxc0-Prescaler-SP $(MXC_14HZ)
+# EVT_14HZ can be in use instead of the sequence which can be stopped
+dbpf $(IOC)-$(DEV):TrigEvt0-EvtCode-SP $(EVT_14HZ)
+dbpf $(IOC)-$(DEV):TrigEvt0-TrigSrc-Sel "Mxc0"
+
+# Heart Beat 1 Hz
+dbpf $(IOC)-$(DEV):Mxc7-Polarity-Sel "Orginal"
+dbpf $(IOC)-$(DEV):Mxc7-Prescaler-SP $(MXC_1HZ)
+dbpf $(IOC)-$(DEV):TrigEvt7-EvtCode-SP $(EVT_HBEAT)
+dbpf $(IOC)-$(DEV):TrigEvt7-TrigSrc-Sel "Mxc7"
+
+
+#EOF

@@ -1,0 +1,185 @@
+# -*- mode: Makefile;-*-
+
+E3_MODULES_VARIABLES:=$(sort $(filter-out $(VARS_EXCLUDES) VARS_EXCLUDES,$(.VARIABLES)))
+
+DEP_MODULES:=$(filter %_DEP_VERSION, $(E3_MODULES_VARIABLES))
+DEP_NAMES:=$(patsubst %_DEP_VERSION,%,$(DEP_MODULES))
+
+
+COMMA := ,
+EMPTY :=
+SPACE := $(EMPTY) $(EMPTY)
+
+COMMA_DEP_NAMES:=$(subst $(SPACE),$(COMMA),$(DEP_NAMES))
+
+
+blank :=
+define newline
+
+$(blank)
+endef
+
+
+
+#LOWER_DEP_MODULES:=$(shell echo $(DEP_MODULES) | tr A-Z a-z)
+#DEP_MODULES_NAME:=$(subst _DEP_VERSION, "", $(DEP_MODULES))
+
+
+
+LEVEL?=2
+
+GENERATED_DEP_FILE:=$(E3_MODULES_INSTALL_LOCATION_LIB)/$(EPICS_HOST_ARCH)/$(E3_MODULE_NAME).dep
+
+.PHONY: env vars header dep _dep1 _dep2
+
+## Print interesting VARIABLES
+env: vars
+
+vars: header
+	$(foreach v, $(E3_MODULES_VARIABLES), $(info $(v) = $($(v)))) @#noop
+
+header:
+	$(QUIET)echo ""
+	$(QUIET)echo "------------------------------------------------------------"
+	$(QUIET)echo ">>>>     Current EPICS and E3 Environment Variables     <<<<"
+	$(QUIET)echo "------------------------------------------------------------"
+	$(QUIET)echo ""
+
+
+existent:
+ifeq (, $(shell which tree))
+	$(QUIET)ls -d $(E3_MODULES_PATH)/$(E3_MODULE_NAME)
+	$(QUIET)find $(E3_MODULES_PATH)/$(E3_MODULE_NAME)/ -maxdepth $(LEVEL) | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/:---\1/"
+else
+	$(QUIET)tree -L $(LEVEL) $(E3_MODULES_PATH)/$(E3_MODULE_NAME)
+endif
+
+cellvars: vars
+
+dep: _dep2
+ifneq ("$(wildcard $(GENERATED_DEP_FILE))","")
+	$(QUIET)echo "> generated ..."
+	$(QUIET)tail -n+2 $(GENERATED_DEP_FILE) 
+endif
+
+_dep2: _dep1
+	$(foreach v, $(DEP_MODULES), $(info $(v) = $($(v)))) @#noop
+_dep1:
+	$(QUIET)echo "require $(E3_MODULE_NAME),$(E3_MODULE_VERSION)"
+	$(QUIET)echo "< configured ..."
+
+
+vers:
+	$(QUIET)echo "EPICS_MODULE_TAG:=$(EPICS_MODULE_TAG), origin : $(origin EPICS_MODULE_TAG)"
+	$(QUIET)echo "E3_MODULE_VERSION:=$(E3_MODULE_VERSION), origin : $(origin E3_MODULE_VERSION)"
+
+
+
+### The following dependency plot generator rules do NOT cover all
+### dependency information, BUT cover only within this module. 
+## From this point, we have to think how we handle other dependency out of this repository
+## by using rank, subgraph, and so on later.
+## Tuesday, September 10 12:49:41 CEST 2019, han.lee@esss.se
+## https://renenyffenegger.ch/notes/tools/Graphviz/examples/index
+
+define a_gv
+$(QUIET)printf "digraph $(E3_MODULE_NAME) {\n" 
+$(QUIET)printf "node [shape=record];\n" 
+$(QUIET)printf "base [label=\"base $(EPICS_VERSION_NUMBER)\"]\n" 
+$(QUIET)printf "$(E3_REQUIRE_NAME) [label=\"$(E3_REQUIRE_NAME) $(E3_REQUIRE_VERSION)\"]\n" 
+$(QUIET)$(foreach v, $(DEP_NAMES), $(newline)$(tab)$(QUIET)echo $(v) [label=\"$(v) $($(v)_DEP_VERSION)\"]) 
+$(QUIET)printf "$(E3_MODULE_NAME) [label=\"$(E3_MODULE_NAME) $(E3_MODULE_VERSION)\"]\n"  
+$(QUIET)printf "base -> $(E3_REQUIRE_NAME) " 
+endef
+
+define b_gv
+$(QUIET)printf " $(E3_MODULE_NAME) "
+endef
+
+
+define a_gv_file
+$(QUIET)printf "digraph $(E3_MODULE_NAME) {\n" > $@
+$(QUIET)printf "node [shape=record];\n"  >> $@
+$(QUIET)printf "base [label=\"base $(EPICS_VERSION_NUMBER)\"]\n"  >> $@
+$(QUIET)printf "$(E3_REQUIRE_NAME) [label=\"$(E3_REQUIRE_NAME) $(E3_REQUIRE_VERSION)\"]\n"  >> $@
+$(QUIET)$(foreach v, $(DEP_NAMES), $(newline)$(tab)$(QUIET)echo $(v) [label=\"$(v) $($(v)_DEP_VERSION)\"]  >> $@) 
+$(QUIET)printf "$(E3_MODULE_NAME) [label=\"$(E3_MODULE_NAME) $(E3_MODULE_VERSION)\"]\n"   >> $@
+$(QUIET)printf "base -> $(E3_REQUIRE_NAME) "  >> $@
+endef
+
+define b_gv_file
+$(QUIET)printf " $(E3_MODULE_NAME) "  >> $@
+endef
+
+
+
+.PHONY: showgv plotdep $(E3_MODULE_NAME).gv closeplot
+
+FILETYPE?=png
+
+showgv:
+	$(QUIET)echo "/*** Warning this output isn't 100% correct. Please look at them carefully! ***/ \n"
+	$(a_gv)
+ifneq ($(strip $(DEP_MODULES)),)
+	$(QUIET)echo -n "-> { $(COMMA_DEP_NAMES) } ";
+endif
+	$(QUIET)echo -n "-> ";
+ifneq ($(strip $(DEP_MODULES)),)
+	$(QUIET)echo -n " { ";
+endif
+	$(b_gv)
+ifneq ($(strip $(DEP_MODULES)),)
+	$(QUIET)echo -n " } ";
+endif
+	$(QUIET)echo "\n} \n";
+
+
+$(TOP)/docs/$(E3_MODULE_NAME).gv:FORCE | outputPath
+	rm -f $@
+	$(QUIET) $(a_gv_file)
+ifneq ($(strip $(DEP_MODULES)),)
+	$(QUIET)echo -n "-> { $(COMMA_DEP_NAMES) } " >> $@
+endif
+	$(QUIET)echo -n "-> " >> $@
+ifneq ($(strip $(DEP_MODULES)),)
+	$(QUIET)echo -n " { " >> $@
+endif
+	$(QUIET) $(b_gv_file)
+ifneq ($(strip $(DEP_MODULES)),)
+	$(QUIET)echo -n " } ">> $@
+endif
+	$(QUIET)echo "\n} \n">> $@
+
+
+plotdep: $(TOP)/docs/$(E3_MODULE_NAME).gv 
+ifeq (, $(shell which dot))
+	$(QUIET)echo "One should install graphviz in order to run this rule."
+else
+	dot -T$(FILETYPE) $^ -o $(TOP)/docs/$(E3_MODULE_NAME).$(FILETYPE)
+endif
+ifeq (, $(shell which dot))
+	$(QUIET)echo "One should install ImageMagick."
+	ls $(TOP)/docs/$(E3_MODULE_NAME).$(FILETYPE)
+else
+	display $(TOP)/docs/$(E3_MODULE_NAME).$(FILETYPE)&
+endif
+
+closeplot:
+ifneq ($(strip $(shell ps aux |grep -E 'display.*$(FILETYPE)' | grep -v grep | awk '{print $$2}')),)
+	$(QUIET)ps aux |grep -E 'display.*$(FILETYPE)' | grep -v grep | awk '{print $$2}' | xargs kill -9
+endif
+
+outputPath:
+	$(QUIET)mkdir -p $(TOP)/docs
+
+
+# https://www.cmcrossroads.com/article/printing-value-makefile-variable
+PRINT.%:
+	$(QUIET)echo $* = $($*)
+	$(QUIET)echo $*\'s origin is $(origin $*)
+
+print-%:
+	$(QUIET)echo $* = $($*)
+	$(QUIET)echo $*\'s origin is $(origin $*)
+
+FORCE:

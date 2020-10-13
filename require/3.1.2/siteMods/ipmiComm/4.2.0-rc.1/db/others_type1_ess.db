@@ -1,0 +1,676 @@
+# FRU 'presence' record to indicate whether FRU
+# is active; used by edm visibility rules
+record(bi, "$(dev):SH1-P") {
+  field(DESC, "Module presence")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "MCHsensor")
+  field(INP, "#B1 C0 N0 @$(link)+fpres")
+  field(ZNAM, "Not present")
+  field(ONAM, "Present")
+  field(PINI, "YES")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# # Vadatech 'hotswap' sensor, provides FRU M-state
+# record(mbbi, "$(dev):SH1-MSTATE") {
+#   field(SCAN, "10 second")
+# #  field(SCAN, "I/O Intr")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B1 C240 N1 @$(link)+hs")
+#   field(ONVL, "0x01")
+#   field(ONST, "Not Installed")
+#   field(TWVL, "0x02")
+#   field(TWST, "Inactive")
+#   field(THVL, "0x04")
+#   field(THST, "Activation Request")
+#   field(FRVL, "0x08")
+#   field(FRST, "Activation In Progress")
+#   field(FVVL, "0x10")
+#   field(FVST, "Active")
+#   field(SXVL, "0x20")
+#   field(SXST, "Deactivation Request")
+#   field(SVVL, "0x40")
+#   field(SVST, "Deactivation In Progress")
+#   field(EIVL, "0x80")
+#   field(EIST, "Communication Lost")
+# }
+
+record(ai, "$(dev):SH1-FRUID") {
+  field(DESC, "Module type")
+  field(VAL,  "1")
+  field(PINI, "YES")
+}
+
+record(stringin, "$(dev):SH1-BMANUF") {
+  field(DESC, "Board manufacturer")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B1 C0 N0  @$(link)+bmf")
+  field(PINI, "YES")
+  field(FLNK, "$(dev):SH1-BPRODNAME")
+}
+
+record(stringin, "$(dev):SH1-BPRODNAME") {
+  field(DESC, "Board product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B1 C0 N0  @$(link)+bp")
+  field(FLNK, "$(dev):SH1-BSN")
+}
+
+record(stringin, "$(dev):SH1-BSN") {
+  field(DESC, "Board serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B1 C0 N0  @$(link)+bsn")
+  field(FLNK, "$(dev):SH1-BPARTNUMBER")
+}
+
+record(stringin, "$(dev):SH1-BPARTNUMBER") {
+  field(DESC, "Board part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B1 C0 N0  @$(link)+bpn")
+  field(FLNK, "$(dev):SH1-PMANUF")
+}
+
+record(stringin, "$(dev):SH1-PMANUF") {
+  field(DESC, "Product manufacturer")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B1 C0 N0  @$(link)+pmf")
+  field(FLNK, "$(dev):SH1-PPRODNAME")
+}
+
+record(stringin, "$(dev):SH1-PPRODNAME") {
+  field(DESC, "Product product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B1 C0 N0  @$(link)+pp")
+  field(FLNK, "$(dev):SH1-PSN")
+}
+
+record(stringin, "$(dev):SH1-PSN") {
+  field(DESC, "Product serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B1 C0 N0  @$(link)+psn")
+  field(FLNK, "$(dev):SH1-PPARTNUMBER")
+}
+
+record(stringin, "$(dev):SH1-PPARTNUMBER") {
+  field(DESC, "Product part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B1 C0 N0  @$(link)+ppn")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# record(mbbo, "$(dev):SH1-POWERCTL") {
+#   field(DESC, "Payload power control")
+#   field(DTYP, "MCHsensor")
+#   field(OMSL, "supervisory")
+#   field(OUT, "#B1 C0 N0  @$(link)+fru")
+#   field(ZRST, "Power off")
+#   field(ONST, "Power on")
+# #  reset not supported yet
+# #  field(TWST, "Hard reset")
+# }
+
+# record(ai, "$(dev):SH1-PWR") {
+#   field(DESC, "Steady state power draw")
+#   field(SCAN, "10 second")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B1 C0 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SH1-PWRDES")
+# }
+
+# record(ai, "$(dev):SH1-PWRDES") {
+#   field(DESC, "Desired steady state power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B1 C1 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SH1-EPWR")
+# }
+
+# record(ai, "$(dev):SH1-EPWR") {
+#   field(DESC, "Early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B1 C2 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SH1-EPWRDES")
+# }
+
+# record(ai, "$(dev):SH1-EPWRDES") {
+#   field(DESC, "Desired early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B1 C3 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SH1-PWRDLY")
+# }
+
+# record(ai, "$(dev):SH1-PWRDLY") {
+#   field(DESC, "FRU delay to stable power")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B1 C4 N0  @$(link)+pwr")
+#   field(EGU, "s")
+#   field(FLNK, "$(dev):SH1-PWRDYN")
+# }
+
+
+# record(mbbi, "$(dev):SH1-PWRDYN")
+# {
+#   field(DESC, "FRU supports dynamic pwr reconfig")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B1 C0 N0  @$(link)+pwr")
+#   field(ZRST, "No")
+#   field(ZRVL, "0")
+#   field(ONST, "Yes")
+#   field(ONVL, "1")
+# }
+#
+# FRU 'presence' record to indicate whether FRU
+# is active; used by edm visibility rules
+record(bi, "$(dev):SH2-P") {
+  field(DESC, "Module presence")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "MCHsensor")
+  field(INP, "#B2 C0 N0 @$(link)+fpres")
+  field(ZNAM, "Not present")
+  field(ONAM, "Present")
+  field(PINI, "YES")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# # Vadatech 'hotswap' sensor, provides FRU M-state
+# record(mbbi, "$(dev):SH2-MSTATE") {
+#   field(SCAN, "10 second")
+# #  field(SCAN, "I/O Intr")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B2 C240 N1 @$(link)+hs")
+#   field(ONVL, "0x01")
+#   field(ONST, "Not Installed")
+#   field(TWVL, "0x02")
+#   field(TWST, "Inactive")
+#   field(THVL, "0x04")
+#   field(THST, "Activation Request")
+#   field(FRVL, "0x08")
+#   field(FRST, "Activation In Progress")
+#   field(FVVL, "0x10")
+#   field(FVST, "Active")
+#   field(SXVL, "0x20")
+#   field(SXST, "Deactivation Request")
+#   field(SVVL, "0x40")
+#   field(SVST, "Deactivation In Progress")
+#   field(EIVL, "0x80")
+#   field(EIST, "Communication Lost")
+# }
+
+record(ai, "$(dev):SH2-FRUID") {
+  field(DESC, "Module type")
+  field(VAL,  "2")
+  field(PINI, "YES")
+}
+
+record(stringin, "$(dev):SH2-BMANUF") {
+  field(DESC, "Board manufacturer")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B2 C0 N0  @$(link)+bmf")
+  field(PINI, "YES")
+  field(FLNK, "$(dev):SH2-BPRODNAME")
+}
+
+record(stringin, "$(dev):SH2-BPRODNAME") {
+  field(DESC, "Board product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B2 C0 N0  @$(link)+bp")
+  field(FLNK, "$(dev):SH2-BSN")
+}
+
+record(stringin, "$(dev):SH2-BSN") {
+  field(DESC, "Board serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B2 C0 N0  @$(link)+bsn")
+  field(FLNK, "$(dev):SH2-BPARTNUMBER")
+}
+
+record(stringin, "$(dev):SH2-BPARTNUMBER") {
+  field(DESC, "Board part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B2 C0 N0  @$(link)+bpn")
+  field(FLNK, "$(dev):SH2-PMANUF")
+}
+
+record(stringin, "$(dev):SH2-PMANUF") {
+  field(DESC, "Product manufacturer")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B2 C0 N0  @$(link)+pmf")
+  field(FLNK, "$(dev):SH2-PPRODNAME")
+}
+
+record(stringin, "$(dev):SH2-PPRODNAME") {
+  field(DESC, "Product product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B2 C0 N0  @$(link)+pp")
+  field(FLNK, "$(dev):SH2-PSN")
+}
+
+record(stringin, "$(dev):SH2-PSN") {
+  field(DESC, "Product serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B2 C0 N0  @$(link)+psn")
+  field(FLNK, "$(dev):SH2-PPARTNUMBER")
+}
+
+record(stringin, "$(dev):SH2-PPARTNUMBER") {
+  field(DESC, "Product part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B2 C0 N0  @$(link)+ppn")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# record(mbbo, "$(dev):SH2-POWERCTL") {
+#   field(DESC, "Payload power control")
+#   field(DTYP, "MCHsensor")
+#   field(OMSL, "supervisory")
+#   field(OUT, "#B2 C0 N0  @$(link)+fru")
+#   field(ZRST, "Power off")
+#   field(ONST, "Power on")
+# #  reset not supported yet
+# #  field(TWST, "Hard reset")
+# }
+
+# record(ai, "$(dev):SH2-PWR") {
+#   field(DESC, "Steady state power draw")
+#   field(SCAN, "10 second")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B2 C0 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SH2-PWRDES")
+# }
+
+# record(ai, "$(dev):SH2-PWRDES") {
+#   field(DESC, "Desired steady state power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B2 C1 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SH2-EPWR")
+# }
+
+# record(ai, "$(dev):SH2-EPWR") {
+#   field(DESC, "Early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B2 C2 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SH2-EPWRDES")
+# }
+
+# record(ai, "$(dev):SH2-EPWRDES") {
+#   field(DESC, "Desired early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B2 C3 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SH2-PWRDLY")
+# }
+
+# record(ai, "$(dev):SH2-PWRDLY") {
+#   field(DESC, "FRU delay to stable power")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B2 C4 N0  @$(link)+pwr")
+#   field(EGU, "s")
+#   field(FLNK, "$(dev):SH2-PWRDYN")
+# }
+
+
+# record(mbbi, "$(dev):SH2-PWRDYN")
+# {
+#   field(DESC, "FRU supports dynamic pwr reconfig")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B2 C0 N0  @$(link)+pwr")
+#   field(ZRST, "No")
+#   field(ZRVL, "0")
+#   field(ONST, "Yes")
+#   field(ONVL, "1")
+# }
+#
+# FRU 'presence' record to indicate whether FRU
+# is active; used by edm visibility rules
+record(bi, "$(dev):CM1-P") {
+  field(DESC, "Module presence")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "MCHsensor")
+  field(INP, "#B253 C0 N0 @$(link)+fpres")
+  field(ZNAM, "Not present")
+  field(ONAM, "Present")
+  field(PINI, "YES")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# # Vadatech 'hotswap' sensor, provides FRU M-state
+# record(mbbi, "$(dev):CM1-MSTATE") {
+#   field(SCAN, "10 second")
+# #  field(SCAN, "I/O Intr")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B253 C240 N1 @$(link)+hs")
+#   field(ONVL, "0x01")
+#   field(ONST, "Not Installed")
+#   field(TWVL, "0x02")
+#   field(TWST, "Inactive")
+#   field(THVL, "0x04")
+#   field(THST, "Activation Request")
+#   field(FRVL, "0x08")
+#   field(FRST, "Activation In Progress")
+#   field(FVVL, "0x10")
+#   field(FVST, "Active")
+#   field(SXVL, "0x20")
+#   field(SXST, "Deactivation Request")
+#   field(SVVL, "0x40")
+#   field(SVST, "Deactivation In Progress")
+#   field(EIVL, "0x80")
+#   field(EIST, "Communication Lost")
+# }
+
+record(ai, "$(dev):CM1-FRUID") {
+  field(DESC, "Module type")
+  field(VAL,  "253")
+  field(PINI, "YES")
+}
+
+record(stringin, "$(dev):CM1-BMANUF") {
+  field(DESC, "Board manufacturer")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B253 C0 N0  @$(link)+bmf")
+  field(PINI, "YES")
+  field(FLNK, "$(dev):CM1-BPRODNAME")
+}
+
+record(stringin, "$(dev):CM1-BPRODNAME") {
+  field(DESC, "Board product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B253 C0 N0  @$(link)+bp")
+  field(FLNK, "$(dev):CM1-BSN")
+}
+
+record(stringin, "$(dev):CM1-BSN") {
+  field(DESC, "Board serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B253 C0 N0  @$(link)+bsn")
+  field(FLNK, "$(dev):CM1-BPARTNUMBER")
+}
+
+record(stringin, "$(dev):CM1-BPARTNUMBER") {
+  field(DESC, "Board part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B253 C0 N0  @$(link)+bpn")
+  field(FLNK, "$(dev):CM1-PMANUF")
+}
+
+record(stringin, "$(dev):CM1-PMANUF") {
+  field(DESC, "Product manufacturer")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B253 C0 N0  @$(link)+pmf")
+  field(FLNK, "$(dev):CM1-PPRODNAME")
+}
+
+record(stringin, "$(dev):CM1-PPRODNAME") {
+  field(DESC, "Product product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B253 C0 N0  @$(link)+pp")
+  field(FLNK, "$(dev):CM1-PSN")
+}
+
+record(stringin, "$(dev):CM1-PSN") {
+  field(DESC, "Product serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B253 C0 N0  @$(link)+psn")
+  field(FLNK, "$(dev):CM1-PPARTNUMBER")
+}
+
+record(stringin, "$(dev):CM1-PPARTNUMBER") {
+  field(DESC, "Product part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B253 C0 N0  @$(link)+ppn")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# record(mbbo, "$(dev):CM1-POWERCTL") {
+#   field(DESC, "Payload power control")
+#   field(DTYP, "MCHsensor")
+#   field(OMSL, "supervisory")
+#   field(OUT, "#B253 C0 N0  @$(link)+fru")
+#   field(ZRST, "Power off")
+#   field(ONST, "Power on")
+# #  reset not supported yet
+# #  field(TWST, "Hard reset")
+# }
+
+# record(ai, "$(dev):CM1-PWR") {
+#   field(DESC, "Steady state power draw")
+#   field(SCAN, "10 second")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B253 C0 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):CM1-PWRDES")
+# }
+
+# record(ai, "$(dev):CM1-PWRDES") {
+#   field(DESC, "Desired steady state power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B253 C1 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):CM1-EPWR")
+# }
+
+# record(ai, "$(dev):CM1-EPWR") {
+#   field(DESC, "Early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B253 C2 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):CM1-EPWRDES")
+# }
+
+# record(ai, "$(dev):CM1-EPWRDES") {
+#   field(DESC, "Desired early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B253 C3 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):CM1-PWRDLY")
+# }
+
+# record(ai, "$(dev):CM1-PWRDLY") {
+#   field(DESC, "FRU delay to stable power")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B253 C4 N0  @$(link)+pwr")
+#   field(EGU, "s")
+#   field(FLNK, "$(dev):CM1-PWRDYN")
+# }
+
+
+# record(mbbi, "$(dev):CM1-PWRDYN")
+# {
+#   field(DESC, "FRU supports dynamic pwr reconfig")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B253 C0 N0  @$(link)+pwr")
+#   field(ZRST, "No")
+#   field(ZRVL, "0")
+#   field(ONST, "Yes")
+#   field(ONVL, "1")
+# }
+#
+# FRU 'presence' record to indicate whether FRU
+# is active; used by edm visibility rules
+record(bi, "$(dev):SHM1-P") {
+  field(DESC, "Module presence")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "MCHsensor")
+  field(INP, "#B254 C0 N0 @$(link)+fpres")
+  field(ZNAM, "Not present")
+  field(ONAM, "Present")
+  field(PINI, "YES")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# # Vadatech 'hotswap' sensor, provides FRU M-state
+# record(mbbi, "$(dev):SHM1-MSTATE") {
+#   field(SCAN, "10 second")
+# #  field(SCAN, "I/O Intr")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B254 C240 N1 @$(link)+hs")
+#   field(ONVL, "0x01")
+#   field(ONST, "Not Installed")
+#   field(TWVL, "0x02")
+#   field(TWST, "Inactive")
+#   field(THVL, "0x04")
+#   field(THST, "Activation Request")
+#   field(FRVL, "0x08")
+#   field(FRST, "Activation In Progress")
+#   field(FVVL, "0x10")
+#   field(FVST, "Active")
+#   field(SXVL, "0x20")
+#   field(SXST, "Deactivation Request")
+#   field(SVVL, "0x40")
+#   field(SVST, "Deactivation In Progress")
+#   field(EIVL, "0x80")
+#   field(EIST, "Communication Lost")
+# }
+
+record(ai, "$(dev):SHM1-FRUID") {
+  field(DESC, "Module type")
+  field(VAL,  "254")
+  field(PINI, "YES")
+}
+
+record(stringin, "$(dev):SHM1-BMANUF") {
+  field(DESC, "Board manufacturer")
+  field(SCAN, "I/O Intr")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B254 C0 N0  @$(link)+bmf")
+  field(PINI, "YES")
+  field(FLNK, "$(dev):SHM1-BPRODNAME")
+}
+
+record(stringin, "$(dev):SHM1-BPRODNAME") {
+  field(DESC, "Board product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B254 C0 N0  @$(link)+bp")
+  field(FLNK, "$(dev):SHM1-BSN")
+}
+
+record(stringin, "$(dev):SHM1-BSN") {
+  field(DESC, "Board serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B254 C0 N0  @$(link)+bsn")
+  field(FLNK, "$(dev):SHM1-BPARTNUMBER")
+}
+
+record(stringin, "$(dev):SHM1-BPARTNUMBER") {
+  field(DESC, "Board part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B254 C0 N0  @$(link)+bpn")
+  field(FLNK, "$(dev):SHM1-PMANUF")
+}
+
+record(stringin, "$(dev):SHM1-PMANUF") {
+  field(DESC, "Product manufacturer")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B254 C0 N0  @$(link)+pmf")
+  field(FLNK, "$(dev):SHM1-PPRODNAME")
+}
+
+record(stringin, "$(dev):SHM1-PPRODNAME") {
+  field(DESC, "Product product name")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B254 C0 N0  @$(link)+pp")
+  field(FLNK, "$(dev):SHM1-PSN")
+}
+
+record(stringin, "$(dev):SHM1-PSN") {
+  field(DESC, "Product serial number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B254 C0 N0  @$(link)+psn")
+  field(FLNK, "$(dev):SHM1-PPARTNUMBER")
+}
+
+record(stringin, "$(dev):SHM1-PPARTNUMBER") {
+  field(DESC, "Product part number")
+  field(DTYP, "FRUinfo")
+  field(INP, "#B254 C0 N0  @$(link)+ppn")
+}
+
+# Troublesome to access the following PVs
+# with Schroff MTCA / NAT-MCH, and so on.
+#
+# record(mbbo, "$(dev):SHM1-POWERCTL") {
+#   field(DESC, "Payload power control")
+#   field(DTYP, "MCHsensor")
+#   field(OMSL, "supervisory")
+#   field(OUT, "#B254 C0 N0  @$(link)+fru")
+#   field(ZRST, "Power off")
+#   field(ONST, "Power on")
+# #  reset not supported yet
+# #  field(TWST, "Hard reset")
+# }
+
+# record(ai, "$(dev):SHM1-PWR") {
+#   field(DESC, "Steady state power draw")
+#   field(SCAN, "10 second")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B254 C0 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SHM1-PWRDES")
+# }
+
+# record(ai, "$(dev):SHM1-PWRDES") {
+#   field(DESC, "Desired steady state power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B254 C1 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SHM1-EPWR")
+# }
+
+# record(ai, "$(dev):SHM1-EPWR") {
+#   field(DESC, "Early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B254 C2 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SHM1-EPWRDES")
+# }
+
+# record(ai, "$(dev):SHM1-EPWRDES") {
+#   field(DESC, "Desired early power draw")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B254 C3 N0  @$(link)+pwr")
+#   field(EGU, "W")
+#   field(FLNK, "$(dev):SHM1-PWRDLY")
+# }
+
+# record(ai, "$(dev):SHM1-PWRDLY") {
+#   field(DESC, "FRU delay to stable power")
+#   field(DTYP, "FRUinfo")
+#   field(INP, "#B254 C4 N0  @$(link)+pwr")
+#   field(EGU, "s")
+#   field(FLNK, "$(dev):SHM1-PWRDYN")
+# }
+
+
+# record(mbbi, "$(dev):SHM1-PWRDYN")
+# {
+#   field(DESC, "FRU supports dynamic pwr reconfig")
+#   field(DTYP, "MCHsensor")
+#   field(INP,  "#B254 C0 N0  @$(link)+pwr")
+#   field(ZRST, "No")
+#   field(ZRVL, "0")
+#   field(ONST, "Yes")
+#   field(ONVL, "1")
+# }
+#

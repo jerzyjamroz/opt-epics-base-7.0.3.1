@@ -1,0 +1,15 @@
+#- ####################################################
+#- ###               RECSYNC    iocsh               ###
+#- ####################################################
+#- >> Mandatory
+#- IOCNAME            - IOCNAME (A-A:B-B)
+#- >> Optional
+#- TIMEOUT    - RECCAST timeout, Default : 5.0
+#- MAXHOLDOFF - RECCAST MaxHoldoff, Default : 5.0
+#-
+#-
+var(reccastTimeout, "$(TIMEOUT=5.0)")
+var(reccastMaxHoldoff, "$(MAXHOLDOFF=5.0)")
+#-
+dbLoadRecords("reccaster.db", "P=$(IOCNAME)-RecSync:")
+#-

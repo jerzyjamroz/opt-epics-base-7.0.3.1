@@ -1,0 +1,5338 @@
+menu(transformIAV) {
+        choice(transformIAV_EXT_NC,"Ext PV NC")
+        choice(transformIAV_EXT,"Ext PV OK")
+        choice(transformIAV_LOC,"Local PV")
+        choice(transformIAV_CON,"Constant")
+}
+menu(transformIVLA) {
+        choice(transformIVLA_IGNORE,"Ignore error")
+        choice(transformIVLA_DO_NOTHING,"Do Nothing")
+}
+menu(transformCOPT) {
+        choice(transformCOPT_CONDITIONAL,"Conditional")
+        choice(transformCOPT_ALWAYS,"Always")
+}
+recordtype(transform) {
+	field(NAME,DBF_STRING) {
+		prompt("Record Name")
+		special(SPC_NOMOD)
+		size(61)
+	}
+	field(DESC,DBF_STRING) {
+		prompt("Descriptor")
+		promptgroup("10 - Common")
+		size(41)
+	}
+	field(ASG,DBF_STRING) {
+		prompt("Access Security Group")
+		promptgroup("10 - Common")
+		special(SPC_AS)
+		size(29)
+	}
+	field(SCAN,DBF_MENU) {
+		prompt("Scan Mechanism")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+		menu(menuScan)
+	}
+	field(PINI,DBF_MENU) {
+		prompt("Process at iocInit")
+		promptgroup("20 - Scan")
+		interest(1)
+		menu(menuPini)
+	}
+	field(PHAS,DBF_SHORT) {
+		prompt("Scan Phase")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+	}
+	field(EVNT,DBF_STRING) {
+		prompt("Event Name")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		size(40)
+		interest(1)
+	}
+	field(TSE,DBF_SHORT) {
+		prompt("Time Stamp Event")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(TSEL,DBF_INLINK) {
+		prompt("Time Stamp Link")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(DTYP,DBF_DEVICE) {
+		prompt("Device Type")
+		promptgroup("10 - Common")
+		interest(1)
+	}
+	field(DISV,DBF_SHORT) {
+		prompt("Disable Value")
+		promptgroup("20 - Scan")
+		initial("1")
+	}
+	field(DISA,DBF_SHORT) {
+		prompt("Disable")
+	}
+	field(SDIS,DBF_INLINK) {
+		prompt("Scanning Disable")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(MLOK,DBF_NOACCESS) {
+		prompt("Monitor lock")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("epicsMutexId        mlok")
+	}
+	field(MLIS,DBF_NOACCESS) {
+		prompt("Monitor List")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("ELLLIST             mlis")
+	}
+	field(BKLNK,DBF_NOACCESS) {
+		prompt("Backwards link tracking")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("ELLLIST             bklnk")
+	}
+	field(DISP,DBF_UCHAR) {
+		prompt("Disable putField")
+	}
+	field(PROC,DBF_UCHAR) {
+		prompt("Force Processing")
+		pp(TRUE)
+		interest(3)
+	}
+	field(STAT,DBF_MENU) {
+		prompt("Alarm Status")
+		special(SPC_NOMOD)
+		menu(menuAlarmStat)
+		initial("UDF")
+	}
+	field(SEVR,DBF_MENU) {
+		prompt("Alarm Severity")
+		special(SPC_NOMOD)
+		menu(menuAlarmSevr)
+	}
+	field(NSTA,DBF_MENU) {
+		prompt("New Alarm Status")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmStat)
+	}
+	field(NSEV,DBF_MENU) {
+		prompt("New Alarm Severity")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+	field(ACKS,DBF_MENU) {
+		prompt("Alarm Ack Severity")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+	field(ACKT,DBF_MENU) {
+		prompt("Alarm Ack Transient")
+		promptgroup("70 - Alarm")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuYesNo)
+		initial("YES")
+	}
+	field(DISS,DBF_MENU) {
+		prompt("Disable Alarm Sevrty")
+		promptgroup("70 - Alarm")
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LCNT,DBF_UCHAR) {
+		prompt("Lock Count")
+		special(SPC_NOMOD)
+		interest(2)
+	}
+	field(PACT,DBF_UCHAR) {
+		prompt("Record active")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(PUTF,DBF_UCHAR) {
+		prompt("dbPutField process")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(RPRO,DBF_UCHAR) {
+		prompt("Reprocess ")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(ASP,DBF_NOACCESS) {
+		prompt("Access Security Pvt")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct asgMember    *asp")
+	}
+	field(PPN,DBF_NOACCESS) {
+		prompt("pprocessNotify")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct processNotify *ppn")
+	}
+	field(PPNR,DBF_NOACCESS) {
+		prompt("pprocessNotifyRecord")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct processNotifyRecord *ppnr")
+	}
+	field(SPVT,DBF_NOACCESS) {
+		prompt("Scan Private")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct scan_element *spvt")
+	}
+	field(RSET,DBF_NOACCESS) {
+		prompt("Address of RSET")
+		special(SPC_NOMOD)
+		interest(4)
+        extra("struct typed_rset   *rset")
+	}
+	field(DSET,DBF_NOACCESS) {
+		prompt("DSET address")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct dset         *dset")
+	}
+	field(DPVT,DBF_NOACCESS) {
+		prompt("Device Private")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("void                *dpvt")
+	}
+	field(RDES,DBF_NOACCESS) {
+		prompt("Address of dbRecordType")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct dbRecordType *rdes")
+	}
+	field(LSET,DBF_NOACCESS) {
+		prompt("Lock Set")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct lockRecord   *lset")
+	}
+	field(PRIO,DBF_MENU) {
+		prompt("Scheduling Priority")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+		menu(menuPriority)
+	}
+	field(TPRO,DBF_UCHAR) {
+		prompt("Trace Processing")
+	}
+	field(BKPT,DBF_NOACCESS) {
+		prompt("Break Point")
+		special(SPC_NOMOD)
+		interest(1)
+		extra("char                bkpt")
+	}
+	field(UDF,DBF_UCHAR) {
+		prompt("Undefined")
+		promptgroup("10 - Common")
+		pp(TRUE)
+		interest(1)
+		initial("1")
+	}
+	field(UDFS,DBF_MENU) {
+		prompt("Undefined Alarm Sevrty")
+		promptgroup("70 - Alarm")
+		interest(1)
+		menu(menuAlarmSevr)
+		initial("INVALID")
+	}
+	field(TIME,DBF_NOACCESS) {
+		prompt("Time")
+		special(SPC_NOMOD)
+		interest(2)
+		extra("epicsTimeStamp      time")
+	}
+	field(FLNK,DBF_FWDLINK) {
+		prompt("Forward Process Link")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(VERS,DBF_FLOAT) {
+		prompt("Code Version")
+		special(SPC_NOMOD)
+		initial("1")
+	}
+	field(RPVT,DBF_NOACCESS) {
+		prompt("Record Private")
+		special(SPC_NOMOD)
+		interest(4)
+		size(4)
+		extra("void *         rpvt")
+	}
+	field(IVLA,DBF_MENU) {
+		prompt("Invalid link action")
+		promptgroup(GUI_COMMON)
+		interest(1)
+		menu(transformIVLA)
+		initial("0")
+	}
+	field(COPT,DBF_MENU) {
+		prompt("Calc option")
+		promptgroup(GUI_COMMON)
+		interest(1)
+		menu(transformCOPT)
+		initial("Conditional")
+	}
+	field(VAL,DBF_DOUBLE) {
+		prompt("Result")
+	}
+	field(CLCA,DBF_STRING) {
+		prompt("Calculation A")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCB,DBF_STRING) {
+		prompt("Calculation B")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCC,DBF_STRING) {
+		prompt("Calculation C")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCD,DBF_STRING) {
+		prompt("Calculation D")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCE,DBF_STRING) {
+		prompt("Calculation E")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCF,DBF_STRING) {
+		prompt("Calculation F")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCG,DBF_STRING) {
+		prompt("Calculation G")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCH,DBF_STRING) {
+		prompt("Calculation H")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCI,DBF_STRING) {
+		prompt("Calculation I")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCJ,DBF_STRING) {
+		prompt("Calculation J")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCK,DBF_STRING) {
+		prompt("Calculation K")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCL,DBF_STRING) {
+		prompt("Calculation L")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCM,DBF_STRING) {
+		prompt("Calculation M")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCN,DBF_STRING) {
+		prompt("Calculation N")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCO,DBF_STRING) {
+		prompt("Calculation O")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CLCP,DBF_STRING) {
+		prompt("Calculation P")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		size(120)
+	}
+	field(CAV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CBV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CCV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CDV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CEV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CFV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CGV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CHV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CIV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CJV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CKV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CLV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CMV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CNV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(COV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(CPV,DBF_LONG) {
+		prompt("CALC Invalid")
+		interest(1)
+	}
+	field(INPA,DBF_INLINK) {
+		prompt("Input A")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPB,DBF_INLINK) {
+		prompt("Input B")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPC,DBF_INLINK) {
+		prompt("Input C")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPD,DBF_INLINK) {
+		prompt("Input D")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPE,DBF_INLINK) {
+		prompt("Input E")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPF,DBF_INLINK) {
+		prompt("Input F")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPG,DBF_INLINK) {
+		prompt("Input G")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPH,DBF_INLINK) {
+		prompt("Input H")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPI,DBF_INLINK) {
+		prompt("Input I")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPJ,DBF_INLINK) {
+		prompt("Input J")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPK,DBF_INLINK) {
+		prompt("Input K")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPL,DBF_INLINK) {
+		prompt("Input L")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPM,DBF_INLINK) {
+		prompt("Input M")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPN,DBF_INLINK) {
+		prompt("Input N")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPO,DBF_INLINK) {
+		prompt("Input O")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(INPP,DBF_INLINK) {
+		prompt("Input P")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTA,DBF_OUTLINK) {
+		prompt("Output A")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTB,DBF_OUTLINK) {
+		prompt("Output B")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTC,DBF_OUTLINK) {
+		prompt("Output C")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTD,DBF_OUTLINK) {
+		prompt("Output D")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTE,DBF_OUTLINK) {
+		prompt("Output E")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTF,DBF_OUTLINK) {
+		prompt("Output F")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTG,DBF_OUTLINK) {
+		prompt("Output G")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTH,DBF_OUTLINK) {
+		prompt("Output H")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTI,DBF_OUTLINK) {
+		prompt("Output I")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTJ,DBF_OUTLINK) {
+		prompt("Output J")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTK,DBF_OUTLINK) {
+		prompt("Output K")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTL,DBF_OUTLINK) {
+		prompt("Output L")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTM,DBF_OUTLINK) {
+		prompt("Output M")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTN,DBF_OUTLINK) {
+		prompt("Output N")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTO,DBF_OUTLINK) {
+		prompt("Output O")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(OUTP,DBF_OUTLINK) {
+		prompt("Output P")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		interest(1)
+	}
+	field(EGU,DBF_STRING) {
+		prompt("Units Name")
+		promptgroup(GUI_COMMON)
+		interest(1)
+		size(16)
+	}
+	field(PREC,DBF_SHORT) {
+		prompt("Display Precision")
+		promptgroup(GUI_COMMON)
+		interest(1)
+	}
+	field(A,DBF_DOUBLE) {
+		prompt("Value of A")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(B,DBF_DOUBLE) {
+		prompt("Value of B")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(C,DBF_DOUBLE) {
+		prompt("Value of C")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(D,DBF_DOUBLE) {
+		prompt("Value of D")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(E,DBF_DOUBLE) {
+		prompt("Value of E")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(F,DBF_DOUBLE) {
+		prompt("Value of F")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(G,DBF_DOUBLE) {
+		prompt("Value of G")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(H,DBF_DOUBLE) {
+		prompt("Value of H")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(I,DBF_DOUBLE) {
+		prompt("Value of I")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(J,DBF_DOUBLE) {
+		prompt("Value of J")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(K,DBF_DOUBLE) {
+		prompt("Value of K")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(L,DBF_DOUBLE) {
+		prompt("Value of L")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(M,DBF_DOUBLE) {
+		prompt("Value of M")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(N,DBF_DOUBLE) {
+		prompt("Value of N")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(O,DBF_DOUBLE) {
+		prompt("Value of O")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(P,DBF_DOUBLE) {
+		prompt("Value of P")
+		promptgroup(GUI_COMMON)
+		special(SPC_MOD)
+		pp(TRUE)
+	}
+	field(LA,DBF_DOUBLE) {
+		prompt("Prev Value of A")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB,DBF_DOUBLE) {
+		prompt("Prev Value of B")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC,DBF_DOUBLE) {
+		prompt("Prev Value of C")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD,DBF_DOUBLE) {
+		prompt("Prev Value of D")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE,DBF_DOUBLE) {
+		prompt("Prev Value of E")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF,DBF_DOUBLE) {
+		prompt("Prev Value of F")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LG,DBF_DOUBLE) {
+		prompt("Prev Value of G")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LH,DBF_DOUBLE) {
+		prompt("Prev Value of H")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LI,DBF_DOUBLE) {
+		prompt("Prev Value of I")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LJ,DBF_DOUBLE) {
+		prompt("Prev Value of J")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LK,DBF_DOUBLE) {
+		prompt("Prev Value of K")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LL,DBF_DOUBLE) {
+		prompt("Prev Value of L")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LM,DBF_DOUBLE) {
+		prompt("Prev Value of M")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LN,DBF_DOUBLE) {
+		prompt("Prev Value of N")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LO,DBF_DOUBLE) {
+		prompt("Prev Value of O")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LP,DBF_DOUBLE) {
+		prompt("Prev Value of P")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(RPCA,DBF_NOACCESS) {
+		prompt("Postfix Calc A")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpca[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCB,DBF_NOACCESS) {
+		prompt("Postfix Calc B")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcb[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCC,DBF_NOACCESS) {
+		prompt("Postfix Calc C")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcc[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCD,DBF_NOACCESS) {
+		prompt("Postfix Calc D")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcd[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCE,DBF_NOACCESS) {
+		prompt("Postfix Calc E")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpce[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCF,DBF_NOACCESS) {
+		prompt("Postfix Calc F")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcf[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCG,DBF_NOACCESS) {
+		prompt("Postfix Calc G")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcg[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCH,DBF_NOACCESS) {
+		prompt("Postfix Calc H")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpch[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCI,DBF_NOACCESS) {
+		prompt("Postfix Calc I")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpci[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCJ,DBF_NOACCESS) {
+		prompt("Postfix Calc J")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcj[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCK,DBF_NOACCESS) {
+		prompt("Postfix Calc K")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpck[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCL,DBF_NOACCESS) {
+		prompt("Postfix Calc L")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcl[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCM,DBF_NOACCESS) {
+		prompt("Postfix Calc M")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcm[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCN,DBF_NOACCESS) {
+		prompt("Postfix Calc N")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcn[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCO,DBF_NOACCESS) {
+		prompt("Postfix Calc O")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpco[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(RPCP,DBF_NOACCESS) {
+		prompt("Postfix Calc P")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcp[SCALC_INFIX_TO_POSTFIX_SIZE(120)]")
+	}
+	field(CMTA,DBF_STRING) {
+		prompt("Comment A")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTB,DBF_STRING) {
+		prompt("Comment B")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTC,DBF_STRING) {
+		prompt("Comment C")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTD,DBF_STRING) {
+		prompt("Comment D")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTE,DBF_STRING) {
+		prompt("Comment E")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTF,DBF_STRING) {
+		prompt("Comment F")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTG,DBF_STRING) {
+		prompt("Comment G")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTH,DBF_STRING) {
+		prompt("Comment H")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTI,DBF_STRING) {
+		prompt("Comment I")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTJ,DBF_STRING) {
+		prompt("Comment J")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTK,DBF_STRING) {
+		prompt("Comment K")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTL,DBF_STRING) {
+		prompt("Comment L")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTM,DBF_STRING) {
+		prompt("Comment M")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTN,DBF_STRING) {
+		prompt("Comment N")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTO,DBF_STRING) {
+		prompt("Comment O")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(CMTP,DBF_STRING) {
+		prompt("Comment P")
+		promptgroup(GUI_COMMON)
+		size(39)
+	}
+	field(MAP,DBF_SHORT) {
+		prompt("Input bitmap")
+		promptgroup(GUI_COMMON)
+		interest(3)
+	}
+	field(IAV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IBV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(ICV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IDV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IEV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IFV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IGV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IHV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IIV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IJV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IKV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(ILV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IMV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(INV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IOV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(IPV,DBF_MENU) {
+		prompt("Input link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OAV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OBV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OCV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(ODV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OEV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OFV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OGV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OHV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OIV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OJV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OKV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OLV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OMV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(ONV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OOV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+	field(OPV,DBF_MENU) {
+		prompt("Output link valid")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(transformIAV)
+		initial("1")
+	}
+}
+menu(scalcoutOOPT) {
+	choice(scalcoutOOPT_Every_Time,"Every Time")
+	choice(scalcoutOOPT_On_Change,"On Change")
+	choice(scalcoutOOPT_When_Zero,"When Zero")
+	choice(scalcoutOOPT_When_Non_zero,"When Non-zero")
+	choice(scalcoutOOPT_Transition_To_Zero,"Transition To Zero")
+	choice(scalcoutOOPT_Transition_To_Non_zero,"Transition To Non-zero")
+	choice(scalcoutOOPT_Never,"Never")
+}
+menu(scalcoutDOPT) {
+	choice(scalcoutDOPT_Use_VAL,"Use CALC")
+	choice(scalcoutDOPT_Use_OVAL,"Use OCAL")
+}
+menu(scalcoutINAP) {
+	choice(scalcoutINAP_No,"No PROC on Change")
+	choice(scalcoutINAP_Yes,"PROC on Change")
+}
+menu(scalcoutINAV) {
+	choice(scalcoutINAV_EXT_NC,"Ext PV NC")
+	choice(scalcoutINAV_EXT,"Ext PV OK")
+	choice(scalcoutINAV_LOC,"Local PV")
+	choice(scalcoutINAV_CON,"Constant")
+}
+menu(scalcoutWAIT) {
+	choice(scalcoutWAIT_NoWait,"NoWait")
+	choice(scalcoutWAIT_Wait,"Wait")
+}
+recordtype(scalcout) {
+	field(NAME,DBF_STRING) {
+		prompt("Record Name")
+		special(SPC_NOMOD)
+		size(61)
+	}
+	field(DESC,DBF_STRING) {
+		prompt("Descriptor")
+		promptgroup("10 - Common")
+		size(41)
+	}
+	field(ASG,DBF_STRING) {
+		prompt("Access Security Group")
+		promptgroup("10 - Common")
+		special(SPC_AS)
+		size(29)
+	}
+	field(SCAN,DBF_MENU) {
+		prompt("Scan Mechanism")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+		menu(menuScan)
+	}
+	field(PINI,DBF_MENU) {
+		prompt("Process at iocInit")
+		promptgroup("20 - Scan")
+		interest(1)
+		menu(menuPini)
+	}
+	field(PHAS,DBF_SHORT) {
+		prompt("Scan Phase")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+	}
+	field(EVNT,DBF_STRING) {
+		prompt("Event Name")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		size(40)
+		interest(1)
+	}
+	field(TSE,DBF_SHORT) {
+		prompt("Time Stamp Event")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(TSEL,DBF_INLINK) {
+		prompt("Time Stamp Link")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(DTYP,DBF_DEVICE) {
+		prompt("Device Type")
+		promptgroup("10 - Common")
+		interest(1)
+	}
+	field(DISV,DBF_SHORT) {
+		prompt("Disable Value")
+		promptgroup("20 - Scan")
+		initial("1")
+	}
+	field(DISA,DBF_SHORT) {
+		prompt("Disable")
+	}
+	field(SDIS,DBF_INLINK) {
+		prompt("Scanning Disable")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(MLOK,DBF_NOACCESS) {
+		prompt("Monitor lock")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("epicsMutexId        mlok")
+	}
+	field(MLIS,DBF_NOACCESS) {
+		prompt("Monitor List")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("ELLLIST             mlis")
+	}
+	field(BKLNK,DBF_NOACCESS) {
+		prompt("Backwards link tracking")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("ELLLIST             bklnk")
+	}
+	field(DISP,DBF_UCHAR) {
+		prompt("Disable putField")
+	}
+	field(PROC,DBF_UCHAR) {
+		prompt("Force Processing")
+		pp(TRUE)
+		interest(3)
+	}
+	field(STAT,DBF_MENU) {
+		prompt("Alarm Status")
+		special(SPC_NOMOD)
+		menu(menuAlarmStat)
+		initial("UDF")
+	}
+	field(SEVR,DBF_MENU) {
+		prompt("Alarm Severity")
+		special(SPC_NOMOD)
+		menu(menuAlarmSevr)
+	}
+	field(NSTA,DBF_MENU) {
+		prompt("New Alarm Status")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmStat)
+	}
+	field(NSEV,DBF_MENU) {
+		prompt("New Alarm Severity")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+	field(ACKS,DBF_MENU) {
+		prompt("Alarm Ack Severity")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+	field(ACKT,DBF_MENU) {
+		prompt("Alarm Ack Transient")
+		promptgroup("70 - Alarm")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuYesNo)
+		initial("YES")
+	}
+	field(DISS,DBF_MENU) {
+		prompt("Disable Alarm Sevrty")
+		promptgroup("70 - Alarm")
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LCNT,DBF_UCHAR) {
+		prompt("Lock Count")
+		special(SPC_NOMOD)
+		interest(2)
+	}
+	field(PACT,DBF_UCHAR) {
+		prompt("Record active")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(PUTF,DBF_UCHAR) {
+		prompt("dbPutField process")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(RPRO,DBF_UCHAR) {
+		prompt("Reprocess ")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(ASP,DBF_NOACCESS) {
+		prompt("Access Security Pvt")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct asgMember    *asp")
+	}
+	field(PPN,DBF_NOACCESS) {
+		prompt("pprocessNotify")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct processNotify *ppn")
+	}
+	field(PPNR,DBF_NOACCESS) {
+		prompt("pprocessNotifyRecord")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct processNotifyRecord *ppnr")
+	}
+	field(SPVT,DBF_NOACCESS) {
+		prompt("Scan Private")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct scan_element *spvt")
+	}
+	field(RSET,DBF_NOACCESS) {
+		prompt("Address of RSET")
+		special(SPC_NOMOD)
+		interest(4)
+        extra("struct typed_rset   *rset")
+	}
+	field(DSET,DBF_NOACCESS) {
+		prompt("DSET address")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct dset         *dset")
+	}
+	field(DPVT,DBF_NOACCESS) {
+		prompt("Device Private")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("void                *dpvt")
+	}
+	field(RDES,DBF_NOACCESS) {
+		prompt("Address of dbRecordType")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct dbRecordType *rdes")
+	}
+	field(LSET,DBF_NOACCESS) {
+		prompt("Lock Set")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct lockRecord   *lset")
+	}
+	field(PRIO,DBF_MENU) {
+		prompt("Scheduling Priority")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+		menu(menuPriority)
+	}
+	field(TPRO,DBF_UCHAR) {
+		prompt("Trace Processing")
+	}
+	field(BKPT,DBF_NOACCESS) {
+		prompt("Break Point")
+		special(SPC_NOMOD)
+		interest(1)
+		extra("char                bkpt")
+	}
+	field(UDF,DBF_UCHAR) {
+		prompt("Undefined")
+		promptgroup("10 - Common")
+		pp(TRUE)
+		interest(1)
+		initial("1")
+	}
+	field(UDFS,DBF_MENU) {
+		prompt("Undefined Alarm Sevrty")
+		promptgroup("70 - Alarm")
+		interest(1)
+		menu(menuAlarmSevr)
+		initial("INVALID")
+	}
+	field(TIME,DBF_NOACCESS) {
+		prompt("Time")
+		special(SPC_NOMOD)
+		interest(2)
+		extra("epicsTimeStamp      time")
+	}
+	field(FLNK,DBF_FWDLINK) {
+		prompt("Forward Process Link")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(VERS,DBF_DOUBLE) {
+		prompt("Code Version")
+		special(SPC_NOMOD)
+		initial("1")
+	}
+	field(RPVT,DBF_NOACCESS) {
+		prompt("Record Private")
+		special(SPC_NOMOD)
+		interest(4)
+		size(4)
+		extra("void *rpvt")
+	}
+	field(VAL,DBF_DOUBLE) {
+		prompt("Result")
+		asl(ASL0)
+	}
+	field(SVAL,DBF_STRING) {
+		prompt("String result")
+		asl(ASL0)
+		size(40)
+	}
+	field(PVAL,DBF_DOUBLE) {
+		prompt("Previous Value")
+	}
+	field(PSVL,DBF_STRING) {
+		prompt("Previous string result")
+		special(SPC_NOMOD)
+		size(40)
+	}
+	field(CALC,DBF_STRING) {
+		prompt("Calculation")
+		promptgroup(GUI_CALC)
+		special(SPC_MOD)
+		pp(TRUE)
+		size(80)
+	}
+	field(CLCV,DBF_LONG) {
+		prompt("CALC Valid")
+		interest(1)
+	}
+	field(INPA,DBF_INLINK) {
+		prompt("Input A")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPB,DBF_INLINK) {
+		prompt("Input B")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPC,DBF_INLINK) {
+		prompt("Input C")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPD,DBF_INLINK) {
+		prompt("Input D")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPE,DBF_INLINK) {
+		prompt("Input E")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPF,DBF_INLINK) {
+		prompt("Input F")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPG,DBF_INLINK) {
+		prompt("Input G")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPH,DBF_INLINK) {
+		prompt("Input H")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPI,DBF_INLINK) {
+		prompt("Input I")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPJ,DBF_INLINK) {
+		prompt("Input J")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPK,DBF_INLINK) {
+		prompt("Input K")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPL,DBF_INLINK) {
+		prompt("Input L")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INAA,DBF_INLINK) {
+		prompt("String input AA")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INBB,DBF_INLINK) {
+		prompt("String input BB")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INCC,DBF_INLINK) {
+		prompt("String input CC")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INDD,DBF_INLINK) {
+		prompt("String input DD")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INEE,DBF_INLINK) {
+		prompt("String input EE")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INFF,DBF_INLINK) {
+		prompt("String input FF")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INGG,DBF_INLINK) {
+		prompt("String input GG")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INHH,DBF_INLINK) {
+		prompt("String input HH")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INII,DBF_INLINK) {
+		prompt("String input II")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INJJ,DBF_INLINK) {
+		prompt("String input JJ")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INKK,DBF_INLINK) {
+		prompt("String input KK")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INLL,DBF_INLINK) {
+		prompt("String input LL")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(OUT,DBF_OUTLINK) {
+		prompt("Output Link")
+		special(SPC_MOD)
+		promptgroup(GUI_OUTPUT)
+		interest(1)
+	}
+	field(INAV,DBF_MENU) {
+		prompt("INPA PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INBV,DBF_MENU) {
+		prompt("INPB PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INCV,DBF_MENU) {
+		prompt("INPC PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INDV,DBF_MENU) {
+		prompt("INPD PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INEV,DBF_MENU) {
+		prompt("INPE PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INFV,DBF_MENU) {
+		prompt("INPF PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INGV,DBF_MENU) {
+		prompt("INPG PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INHV,DBF_MENU) {
+		prompt("INPH PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INIV,DBF_MENU) {
+		prompt("INPI PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INJV,DBF_MENU) {
+		prompt("INPJ PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INKV,DBF_MENU) {
+		prompt("INPK PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(INLV,DBF_MENU) {
+		prompt("INPL PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(IAAV,DBF_MENU) {
+		prompt("INAA PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(IBBV,DBF_MENU) {
+		prompt("INBB PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(ICCV,DBF_MENU) {
+		prompt("INCC PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(IDDV,DBF_MENU) {
+		prompt("INDD PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(IEEV,DBF_MENU) {
+		prompt("INEE PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(IFFV,DBF_MENU) {
+		prompt("INFF PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(IGGV,DBF_MENU) {
+		prompt("INGG PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(IHHV,DBF_MENU) {
+		prompt("INHH PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(IIIV,DBF_MENU) {
+		prompt("INII PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(IJJV,DBF_MENU) {
+		prompt("INJJ PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(IKKV,DBF_MENU) {
+		prompt("INKK PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(ILLV,DBF_MENU) {
+		prompt("INLL PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+		initial("1")
+	}
+	field(OUTV,DBF_MENU) {
+		prompt("OUT PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(scalcoutINAV)
+	}
+	field(OOPT,DBF_MENU) {
+		prompt("Output Execute Opt")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(scalcoutOOPT)
+	}
+	field(ODLY,DBF_DOUBLE) {
+		prompt("Output Execute Delay")
+		promptgroup(GUI_ALARMS)
+		asl(ASL0)
+		interest(1)
+	}
+	field(WAIT,DBF_MENU) {
+		prompt("Wait for completion?")
+		interest(1)
+		menu(scalcoutWAIT)
+	}
+	field(DLYA,DBF_USHORT) {
+		prompt("Output Delay Active")
+		special(SPC_NOMOD)
+		asl(ASL0)
+	}
+	field(DOPT,DBF_MENU) {
+		prompt("Output Data Opt")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(scalcoutDOPT)
+	}
+	field(OCAL,DBF_STRING) {
+		prompt("Output Calculation")
+		promptgroup(GUI_CALC)
+		special(SPC_MOD)
+		pp(TRUE)
+		size(80)
+	}
+	field(OCLV,DBF_LONG) {
+		prompt("OCAL Valid")
+		interest(1)
+	}
+	field(OEVT,DBF_USHORT) {
+		prompt("Event To Issue")
+		promptgroup(GUI_CLOCK)
+		asl(ASL0)
+	}
+	field(IVOA,DBF_MENU) {
+		prompt("INVALID output action")
+		promptgroup(GUI_OUTPUT)
+		interest(2)
+		menu(menuIvoa)
+	}
+	field(IVOV,DBF_DOUBLE) {
+		prompt("INVALID output value")
+		promptgroup(GUI_OUTPUT)
+		interest(2)
+	}
+	field(EGU,DBF_STRING) {
+		prompt("Units Name")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+		size(16)
+	}
+	field(PREC,DBF_SHORT) {
+		prompt("Display Precision")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(HOPR,DBF_DOUBLE) {
+		prompt("High Operating Rng")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(LOPR,DBF_DOUBLE) {
+		prompt("Low Operating Range")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(HIHI,DBF_DOUBLE) {
+		prompt("Hihi Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(LOLO,DBF_DOUBLE) {
+		prompt("Lolo Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(HIGH,DBF_DOUBLE) {
+		prompt("High Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(LOW,DBF_DOUBLE) {
+		prompt("Low Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(HHSV,DBF_MENU) {
+		prompt("Hihi Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LLSV,DBF_MENU) {
+		prompt("Lolo Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(HSV,DBF_MENU) {
+		prompt("High Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LSV,DBF_MENU) {
+		prompt("Low Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(HYST,DBF_DOUBLE) {
+		prompt("Alarm Deadband")
+		promptgroup(GUI_ALARMS)
+		interest(1)
+	}
+	field(ADEL,DBF_DOUBLE) {
+		prompt("Archive Deadband")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(MDEL,DBF_DOUBLE) {
+		prompt("Monitor Deadband")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(A,DBF_DOUBLE) {
+		prompt("Value of Input A")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(B,DBF_DOUBLE) {
+		prompt("Value of Input B")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(C,DBF_DOUBLE) {
+		prompt("Value of Input C")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(D,DBF_DOUBLE) {
+		prompt("Value of Input D")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(E,DBF_DOUBLE) {
+		prompt("Value of Input E")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(F,DBF_DOUBLE) {
+		prompt("Value of Input F")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(G,DBF_DOUBLE) {
+		prompt("Value of Input G")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(H,DBF_DOUBLE) {
+		prompt("Value of Input H")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(I,DBF_DOUBLE) {
+		prompt("Value of Input I")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(J,DBF_DOUBLE) {
+		prompt("Value of Input J")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(K,DBF_DOUBLE) {
+		prompt("Value of Input K")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(L,DBF_DOUBLE) {
+		prompt("Value of Input L")
+		promptgroup(GUI_COMMON)
+		pp(TRUE)
+	}
+	field(STRS,DBF_NOACCESS) {
+		prompt("Array of string pointers")
+		interest(4)
+		size(4)
+		extra("char **strs")
+	}
+	field(AA,DBF_STRING) {
+		prompt("Value of string input AA")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(BB,DBF_STRING) {
+		prompt("Value of string input BB")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(CC,DBF_STRING) {
+		prompt("Value of string input CC")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(DD,DBF_STRING) {
+		prompt("Value of string input DD")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(EE,DBF_STRING) {
+		prompt("Value of string input EE")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(FF,DBF_STRING) {
+		prompt("Value of string input FF")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(GG,DBF_STRING) {
+		prompt("Value of string input GG")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(HH,DBF_STRING) {
+		prompt("Value of string input HH")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(II,DBF_STRING) {
+		prompt("Value of string input II")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(JJ,DBF_STRING) {
+		prompt("Value of string input JJ")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(KK,DBF_STRING) {
+		prompt("Value of string input KK")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(LL,DBF_STRING) {
+		prompt("Value of string input LL")
+		promptgroup(GUI_COMMON)
+		interest(4)
+		size(40)
+		pp(TRUE)
+	}
+	field(PAA,DBF_NOACCESS) {
+		prompt("Prev Value of AA")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *paa")
+	}
+	field(PBB,DBF_NOACCESS) {
+		prompt("Prev Value of BB")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *pbb")
+	}
+	field(PCC,DBF_NOACCESS) {
+		prompt("Prev Value of CC")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *pcc")
+	}
+	field(PDD,DBF_NOACCESS) {
+		prompt("Prev Value of DD")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *pdd")
+	}
+	field(PEE,DBF_NOACCESS) {
+		prompt("Prev Value of EE")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *pee")
+	}
+	field(PFF,DBF_NOACCESS) {
+		prompt("Prev Value of FF")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *pff")
+	}
+	field(PGG,DBF_NOACCESS) {
+		prompt("Prev Value of GG")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *pgg")
+	}
+	field(PHH,DBF_NOACCESS) {
+		prompt("Prev Value of HH")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *phh")
+	}
+	field(PII,DBF_NOACCESS) {
+		prompt("Prev Value of II")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *pii")
+	}
+	field(PJJ,DBF_NOACCESS) {
+		prompt("Prev Value of JJ")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *pjj")
+	}
+	field(PKK,DBF_NOACCESS) {
+		prompt("Prev Value of KK")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *pkk")
+	}
+	field(PLL,DBF_NOACCESS) {
+		prompt("Prev Value of LL")
+		special(SPC_DBADDR)
+		interest(4)
+		size(4)
+		extra("char *pll")
+	}
+	field(OVAL,DBF_DOUBLE) {
+		prompt("Output Value")
+		asl(ASL0)
+	}
+	field(OSV,DBF_STRING) {
+		prompt("Output string value")
+		asl(ASL0)
+		size(40)
+	}
+	field(POSV,DBF_STRING) {
+		prompt("Previous output string value")
+		special(SPC_NOMOD)
+		size(40)
+	}
+	field(PA,DBF_DOUBLE) {
+		prompt("Prev Value of A")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PB,DBF_DOUBLE) {
+		prompt("Prev Value of B")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PC,DBF_DOUBLE) {
+		prompt("Prev Value of C")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PD,DBF_DOUBLE) {
+		prompt("Prev Value of D")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PE,DBF_DOUBLE) {
+		prompt("Prev Value of E")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PF,DBF_DOUBLE) {
+		prompt("Prev Value of F")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PG,DBF_DOUBLE) {
+		prompt("Prev Value of G")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PH,DBF_DOUBLE) {
+		prompt("Prev Value of H")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PI,DBF_DOUBLE) {
+		prompt("Prev Value of I")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PJ,DBF_DOUBLE) {
+		prompt("Prev Value of J")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PK,DBF_DOUBLE) {
+		prompt("Prev Value of K")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PL,DBF_DOUBLE) {
+		prompt("Prev Value of L")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(POVL,DBF_DOUBLE) {
+		prompt("Prev Value of OVAL")
+		asl(ASL0)
+	}
+	field(LALM,DBF_DOUBLE) {
+		prompt("Last Value Alarmed")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(ALST,DBF_DOUBLE) {
+		prompt("Last Value Archived")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(MLST,DBF_DOUBLE) {
+		prompt("Last Val Monitored")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(RPCL,DBF_NOACCESS) {
+		prompt("Postfix Calc")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcl[282]")
+	}
+	field(ORPC,DBF_NOACCESS) {
+		prompt("Postfix OCalc")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char orpc[282]")
+	}
+}
+menu(acalcoutOOPT) {
+	choice(acalcoutOOPT_Every_Time,"Every Time")
+	choice(acalcoutOOPT_On_Change,"On Change")
+	choice(acalcoutOOPT_When_Zero,"When Zero")
+	choice(acalcoutOOPT_When_Non_zero,"When Non-zero")
+	choice(acalcoutOOPT_Transition_To_Zero,"Transition To Zero")
+	choice(acalcoutOOPT_Transition_To_Non_zero,"Transition To Non-zero")
+	choice(acalcoutOOPT_Never,"Never")
+}
+menu(acalcoutDOPT) {
+	choice(acalcoutDOPT_Use_VAL,"Use CALC")
+	choice(acalcoutDOPT_Use_OVAL,"Use OCAL")
+}
+menu(acalcoutINAP) {
+	choice(acalcoutINAP_No,"No PROC on Change")
+	choice(acalcoutINAP_Yes,"PROC on Change")
+}
+menu(acalcoutINAV) {
+	choice(acalcoutINAV_EXT_NC,"Ext PV NC")
+	choice(acalcoutINAV_EXT,"Ext PV OK")
+	choice(acalcoutINAV_LOC,"Local PV")
+	choice(acalcoutINAV_CON,"Constant")
+}
+menu(acalcoutWAIT) {
+	choice(acalcoutWAIT_NoWait,"NoWait")
+	choice(acalcoutWAIT_Wait,"Wait")
+}
+menu(acalcoutSIZE) {
+	choice(acalcoutSIZE_NELM,"NELM")
+	choice(acalcoutSIZE_NUSE,"NUSE")
+}
+recordtype(acalcout) {
+	field(NAME,DBF_STRING) {
+		prompt("Record Name")
+		special(SPC_NOMOD)
+		size(61)
+	}
+	field(DESC,DBF_STRING) {
+		prompt("Descriptor")
+		promptgroup("10 - Common")
+		size(41)
+	}
+	field(ASG,DBF_STRING) {
+		prompt("Access Security Group")
+		promptgroup("10 - Common")
+		special(SPC_AS)
+		size(29)
+	}
+	field(SCAN,DBF_MENU) {
+		prompt("Scan Mechanism")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+		menu(menuScan)
+	}
+	field(PINI,DBF_MENU) {
+		prompt("Process at iocInit")
+		promptgroup("20 - Scan")
+		interest(1)
+		menu(menuPini)
+	}
+	field(PHAS,DBF_SHORT) {
+		prompt("Scan Phase")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+	}
+	field(EVNT,DBF_STRING) {
+		prompt("Event Name")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		size(40)
+		interest(1)
+	}
+	field(TSE,DBF_SHORT) {
+		prompt("Time Stamp Event")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(TSEL,DBF_INLINK) {
+		prompt("Time Stamp Link")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(DTYP,DBF_DEVICE) {
+		prompt("Device Type")
+		promptgroup("10 - Common")
+		interest(1)
+	}
+	field(DISV,DBF_SHORT) {
+		prompt("Disable Value")
+		promptgroup("20 - Scan")
+		initial("1")
+	}
+	field(DISA,DBF_SHORT) {
+		prompt("Disable")
+	}
+	field(SDIS,DBF_INLINK) {
+		prompt("Scanning Disable")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(MLOK,DBF_NOACCESS) {
+		prompt("Monitor lock")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("epicsMutexId        mlok")
+	}
+	field(MLIS,DBF_NOACCESS) {
+		prompt("Monitor List")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("ELLLIST             mlis")
+	}
+	field(BKLNK,DBF_NOACCESS) {
+		prompt("Backwards link tracking")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("ELLLIST             bklnk")
+	}
+	field(DISP,DBF_UCHAR) {
+		prompt("Disable putField")
+	}
+	field(PROC,DBF_UCHAR) {
+		prompt("Force Processing")
+		pp(TRUE)
+		interest(3)
+	}
+	field(STAT,DBF_MENU) {
+		prompt("Alarm Status")
+		special(SPC_NOMOD)
+		menu(menuAlarmStat)
+		initial("UDF")
+	}
+	field(SEVR,DBF_MENU) {
+		prompt("Alarm Severity")
+		special(SPC_NOMOD)
+		menu(menuAlarmSevr)
+	}
+	field(NSTA,DBF_MENU) {
+		prompt("New Alarm Status")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmStat)
+	}
+	field(NSEV,DBF_MENU) {
+		prompt("New Alarm Severity")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+	field(ACKS,DBF_MENU) {
+		prompt("Alarm Ack Severity")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+	field(ACKT,DBF_MENU) {
+		prompt("Alarm Ack Transient")
+		promptgroup("70 - Alarm")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuYesNo)
+		initial("YES")
+	}
+	field(DISS,DBF_MENU) {
+		prompt("Disable Alarm Sevrty")
+		promptgroup("70 - Alarm")
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LCNT,DBF_UCHAR) {
+		prompt("Lock Count")
+		special(SPC_NOMOD)
+		interest(2)
+	}
+	field(PACT,DBF_UCHAR) {
+		prompt("Record active")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(PUTF,DBF_UCHAR) {
+		prompt("dbPutField process")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(RPRO,DBF_UCHAR) {
+		prompt("Reprocess ")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(ASP,DBF_NOACCESS) {
+		prompt("Access Security Pvt")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct asgMember    *asp")
+	}
+	field(PPN,DBF_NOACCESS) {
+		prompt("pprocessNotify")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct processNotify *ppn")
+	}
+	field(PPNR,DBF_NOACCESS) {
+		prompt("pprocessNotifyRecord")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct processNotifyRecord *ppnr")
+	}
+	field(SPVT,DBF_NOACCESS) {
+		prompt("Scan Private")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct scan_element *spvt")
+	}
+	field(RSET,DBF_NOACCESS) {
+		prompt("Address of RSET")
+		special(SPC_NOMOD)
+		interest(4)
+        extra("struct typed_rset   *rset")
+	}
+	field(DSET,DBF_NOACCESS) {
+		prompt("DSET address")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct dset         *dset")
+	}
+	field(DPVT,DBF_NOACCESS) {
+		prompt("Device Private")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("void                *dpvt")
+	}
+	field(RDES,DBF_NOACCESS) {
+		prompt("Address of dbRecordType")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct dbRecordType *rdes")
+	}
+	field(LSET,DBF_NOACCESS) {
+		prompt("Lock Set")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct lockRecord   *lset")
+	}
+	field(PRIO,DBF_MENU) {
+		prompt("Scheduling Priority")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+		menu(menuPriority)
+	}
+	field(TPRO,DBF_UCHAR) {
+		prompt("Trace Processing")
+	}
+	field(BKPT,DBF_NOACCESS) {
+		prompt("Break Point")
+		special(SPC_NOMOD)
+		interest(1)
+		extra("char                bkpt")
+	}
+	field(UDF,DBF_UCHAR) {
+		prompt("Undefined")
+		promptgroup("10 - Common")
+		pp(TRUE)
+		interest(1)
+		initial("1")
+	}
+	field(UDFS,DBF_MENU) {
+		prompt("Undefined Alarm Sevrty")
+		promptgroup("70 - Alarm")
+		interest(1)
+		menu(menuAlarmSevr)
+		initial("INVALID")
+	}
+	field(TIME,DBF_NOACCESS) {
+		prompt("Time")
+		special(SPC_NOMOD)
+		interest(2)
+		extra("epicsTimeStamp      time")
+	}
+	field(FLNK,DBF_FWDLINK) {
+		prompt("Forward Process Link")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(VERS,DBF_DOUBLE) {
+		prompt("Code Version")
+		special(SPC_NOMOD)
+		initial("1")
+	}
+	field(RPVT,DBF_NOACCESS) {
+		prompt("Record Private")
+		special(SPC_NOMOD)
+		interest(4)
+		size(4)
+		extra("void *rpvt")
+	}
+	field(VAL,DBF_DOUBLE) {
+		prompt("Result")
+		asl(ASL0)
+	}
+	field(AVAL,DBF_NOACCESS) {
+		prompt("Array Value")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *aval")
+	}
+	field(NELM,DBF_ULONG) {
+		prompt("Number of Elements")
+		promptgroup(GUI_WAVE)
+		special(SPC_NOMOD)
+		interest(1)
+		initial("1")
+	}
+	field(NUSE,DBF_ULONG) {
+		prompt("# elem's in use")
+		promptgroup(GUI_WAVE)
+		special(SPC_MOD)
+		interest(1)
+		pp(TRUE)
+		initial("0")
+	}
+	field(PVAL,DBF_DOUBLE) {
+		prompt("Previous Value")
+	}
+	field(PAVL,DBF_NOACCESS) {
+		prompt("Prev. Array Value")
+		asl(ASL0)
+		pp(TRUE)
+		extra("double *pavl")
+	}
+	field(CALC,DBF_STRING) {
+		prompt("Calculation")
+		promptgroup(GUI_CALC)
+		special(SPC_MOD)
+		pp(TRUE)
+		size(80)
+	}
+	field(CLCV,DBF_LONG) {
+		prompt("CALC Valid")
+		interest(1)
+	}
+	field(INPA,DBF_INLINK) {
+		prompt("Input A")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPB,DBF_INLINK) {
+		prompt("Input B")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPC,DBF_INLINK) {
+		prompt("Input C")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPD,DBF_INLINK) {
+		prompt("Input D")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPE,DBF_INLINK) {
+		prompt("Input E")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPF,DBF_INLINK) {
+		prompt("Input F")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPG,DBF_INLINK) {
+		prompt("Input G")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPH,DBF_INLINK) {
+		prompt("Input H")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPI,DBF_INLINK) {
+		prompt("Input I")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPJ,DBF_INLINK) {
+		prompt("Input J")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPK,DBF_INLINK) {
+		prompt("Input K")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INPL,DBF_INLINK) {
+		prompt("Input L")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INAA,DBF_INLINK) {
+		prompt("Array input AA")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INBB,DBF_INLINK) {
+		prompt("Array input BB")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INCC,DBF_INLINK) {
+		prompt("Array input CC")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INDD,DBF_INLINK) {
+		prompt("Array input DD")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INEE,DBF_INLINK) {
+		prompt("Array input EE")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INFF,DBF_INLINK) {
+		prompt("Array input FF")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INGG,DBF_INLINK) {
+		prompt("Array input GG")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INHH,DBF_INLINK) {
+		prompt("Array input HH")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INII,DBF_INLINK) {
+		prompt("Array input II")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INJJ,DBF_INLINK) {
+		prompt("Array input JJ")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INKK,DBF_INLINK) {
+		prompt("Array input KK")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(INLL,DBF_INLINK) {
+		prompt("Array input LL")
+		special(SPC_MOD)
+		promptgroup(GUI_CALC)
+		interest(1)
+	}
+	field(OUT,DBF_OUTLINK) {
+		prompt("Output Link")
+		special(SPC_MOD)
+		promptgroup(GUI_OUTPUT)
+		interest(1)
+	}
+	field(INAV,DBF_MENU) {
+		prompt("INPA PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INBV,DBF_MENU) {
+		prompt("INPB PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INCV,DBF_MENU) {
+		prompt("INPC PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INDV,DBF_MENU) {
+		prompt("INPD PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INEV,DBF_MENU) {
+		prompt("INPE PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INFV,DBF_MENU) {
+		prompt("INPF PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INGV,DBF_MENU) {
+		prompt("INPG PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INHV,DBF_MENU) {
+		prompt("INPH PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INIV,DBF_MENU) {
+		prompt("INPI PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INJV,DBF_MENU) {
+		prompt("INPJ PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INKV,DBF_MENU) {
+		prompt("INPK PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(INLV,DBF_MENU) {
+		prompt("INPL PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(IAAV,DBF_MENU) {
+		prompt("INAA PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(IBBV,DBF_MENU) {
+		prompt("INBB PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(ICCV,DBF_MENU) {
+		prompt("INCC PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(IDDV,DBF_MENU) {
+		prompt("INDD PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(IEEV,DBF_MENU) {
+		prompt("INEE PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(IFFV,DBF_MENU) {
+		prompt("INFF PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(IGGV,DBF_MENU) {
+		prompt("INGG PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(IHHV,DBF_MENU) {
+		prompt("INHH PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(IIIV,DBF_MENU) {
+		prompt("INII PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(IJJV,DBF_MENU) {
+		prompt("INJJ PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(IKKV,DBF_MENU) {
+		prompt("INKK PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(ILLV,DBF_MENU) {
+		prompt("INLL PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+		initial("1")
+	}
+	field(OUTV,DBF_MENU) {
+		prompt("OUT PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(acalcoutINAV)
+	}
+	field(OOPT,DBF_MENU) {
+		prompt("Output Execute Opt")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(acalcoutOOPT)
+	}
+	field(ODLY,DBF_DOUBLE) {
+		prompt("Output Execute Delay")
+		promptgroup(GUI_ALARMS)
+		asl(ASL0)
+		interest(1)
+	}
+	field(WAIT,DBF_MENU) {
+		prompt("Wait for completion?")
+		interest(1)
+		menu(acalcoutWAIT)
+	}
+	field(DLYA,DBF_USHORT) {
+		prompt("Output Delay Active")
+		special(SPC_NOMOD)
+		asl(ASL0)
+	}
+	field(DOPT,DBF_MENU) {
+		prompt("Output Data Opt")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(acalcoutDOPT)
+	}
+	field(OCAL,DBF_STRING) {
+		prompt("Output Calculation")
+		promptgroup(GUI_CALC)
+		special(SPC_MOD)
+		pp(TRUE)
+		size(80)
+	}
+	field(OCLV,DBF_LONG) {
+		prompt("OCAL Valid")
+		interest(1)
+	}
+	field(OEVT,DBF_USHORT) {
+		prompt("Event To Issue")
+		promptgroup(GUI_CLOCK)
+		asl(ASL0)
+	}
+	field(IVOA,DBF_MENU) {
+		prompt("INVALID output action")
+		promptgroup(GUI_OUTPUT)
+		interest(2)
+		menu(menuIvoa)
+	}
+	field(IVOV,DBF_DOUBLE) {
+		prompt("INVALID output value")
+		promptgroup(GUI_OUTPUT)
+		interest(2)
+	}
+	field(EGU,DBF_STRING) {
+		prompt("Units Name")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+		size(16)
+	}
+	field(PREC,DBF_SHORT) {
+		prompt("Display Precision")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(HOPR,DBF_DOUBLE) {
+		prompt("High Operating Rng")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(LOPR,DBF_DOUBLE) {
+		prompt("Low Operating Range")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(HIHI,DBF_DOUBLE) {
+		prompt("Hihi Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(LOLO,DBF_DOUBLE) {
+		prompt("Lolo Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(HIGH,DBF_DOUBLE) {
+		prompt("High Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(LOW,DBF_DOUBLE) {
+		prompt("Low Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(HHSV,DBF_MENU) {
+		prompt("Hihi Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LLSV,DBF_MENU) {
+		prompt("Lolo Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(HSV,DBF_MENU) {
+		prompt("High Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LSV,DBF_MENU) {
+		prompt("Low Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(HYST,DBF_DOUBLE) {
+		prompt("Alarm Deadband")
+		promptgroup(GUI_ALARMS)
+		interest(1)
+	}
+	field(ADEL,DBF_DOUBLE) {
+		prompt("Archive Deadband")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(MDEL,DBF_DOUBLE) {
+		prompt("Monitor Deadband")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(A,DBF_DOUBLE) {
+		prompt("Value of Input A")
+		pp(TRUE)
+	}
+	field(B,DBF_DOUBLE) {
+		prompt("Value of Input B")
+		pp(TRUE)
+	}
+	field(C,DBF_DOUBLE) {
+		prompt("Value of Input C")
+		pp(TRUE)
+	}
+	field(D,DBF_DOUBLE) {
+		prompt("Value of Input D")
+		pp(TRUE)
+	}
+	field(E,DBF_DOUBLE) {
+		prompt("Value of Input E")
+		pp(TRUE)
+	}
+	field(F,DBF_DOUBLE) {
+		prompt("Value of Input F")
+		pp(TRUE)
+	}
+	field(G,DBF_DOUBLE) {
+		prompt("Value of Input G")
+		pp(TRUE)
+	}
+	field(H,DBF_DOUBLE) {
+		prompt("Value of Input H")
+		pp(TRUE)
+	}
+	field(I,DBF_DOUBLE) {
+		prompt("Value of Input I")
+		pp(TRUE)
+	}
+	field(J,DBF_DOUBLE) {
+		prompt("Value of Input J")
+		pp(TRUE)
+	}
+	field(K,DBF_DOUBLE) {
+		prompt("Value of Input K")
+		pp(TRUE)
+	}
+	field(L,DBF_DOUBLE) {
+		prompt("Value of Input L")
+		pp(TRUE)
+	}
+	field(AA,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *aa")
+	}
+	field(BB,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *bb")
+	}
+	field(CC,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *cc")
+	}
+	field(DD,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *dd")
+	}
+	field(EE,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *ee")
+	}
+	field(FF,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *ff")
+	}
+	field(GG,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *gg")
+	}
+	field(HH,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *hh")
+	}
+	field(II,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *ii")
+	}
+	field(JJ,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *jj")
+	}
+	field(KK,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *kk")
+	}
+	field(LL,DBF_NOACCESS) {
+		prompt("Value of array input")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *ll")
+	}
+	field(PAA,DBF_NOACCESS) {
+		prompt("Prev Val of array input")
+		asl(ASL0)
+		extra("double *paa")
+	}
+	field(NEWM,DBF_ULONG) {
+		prompt("new array value mask")
+		asl(ASL0)
+		special(SPC_NOMOD)
+	}
+	field(OVAL,DBF_DOUBLE) {
+		prompt("Output Value")
+		asl(ASL0)
+	}
+	field(OAV,DBF_NOACCESS) {
+		prompt("Output array value")
+		asl(ASL0)
+		special(SPC_DBADDR)
+		pp(TRUE)
+		extra("double *oav")
+	}
+	field(POAV,DBF_NOACCESS) {
+		prompt("Output array value")
+		asl(ASL0)
+		pp(TRUE)
+		extra("double *poav")
+	}
+	field(PA,DBF_DOUBLE) {
+		prompt("Prev Value of A")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PB,DBF_DOUBLE) {
+		prompt("Prev Value of B")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PC,DBF_DOUBLE) {
+		prompt("Prev Value of C")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PD,DBF_DOUBLE) {
+		prompt("Prev Value of D")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PE,DBF_DOUBLE) {
+		prompt("Prev Value of E")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PF,DBF_DOUBLE) {
+		prompt("Prev Value of F")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PG,DBF_DOUBLE) {
+		prompt("Prev Value of G")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PH,DBF_DOUBLE) {
+		prompt("Prev Value of H")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PI,DBF_DOUBLE) {
+		prompt("Prev Value of I")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PJ,DBF_DOUBLE) {
+		prompt("Prev Value of J")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PK,DBF_DOUBLE) {
+		prompt("Prev Value of K")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(PL,DBF_DOUBLE) {
+		prompt("Prev Value of L")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(POVL,DBF_DOUBLE) {
+		prompt("Prev Value of OVAL")
+		asl(ASL0)
+	}
+	field(LALM,DBF_DOUBLE) {
+		prompt("Last Value Alarmed")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(ALST,DBF_DOUBLE) {
+		prompt("Last Value Archived")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(MLST,DBF_DOUBLE) {
+		prompt("Last Val Monitored")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(RPCL,DBF_NOACCESS) {
+		prompt("Reverse Polish Calc")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char rpcl[282]")
+	}
+	field(ORPC,DBF_NOACCESS) {
+		prompt("Reverse Polish OCalc")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("unsigned char orpc[282]")
+	}
+    field(CACT, DBF_UCHAR) {
+        special(SPC_NOMOD)
+        interest(1)
+        prompt("Calc active")
+    }
+	field(CSTAT, DBF_LONG) {
+        special(SPC_NOMOD)
+        interest(1)
+        prompt("Calc status")
+    }
+	field(AMASK, DBF_ULONG) {
+        special(SPC_NOMOD)
+        interest(1)
+        prompt("Array mod")
+    }
+	field(SIZE,DBF_MENU) {
+		prompt("Array size reported to clients")
+		interest(1)
+		menu(acalcoutSIZE)
+	}
+	field(AMEM, DBF_LONG) {
+        special(SPC_NOMOD)
+        interest(1)
+        prompt("Allocated array memory")
+    }
+	field(PMEM, DBF_LONG) {
+        special(SPC_NOMOD)
+        interest(1)
+        prompt("Prev array memory")
+    }
+}
+menu(sseqSELM) {
+	choice(sseqSELM_All,"All")
+	choice(sseqSELM_Specified,"Specified")
+	choice(sseqSELM_Mask,"Mask")
+}
+menu(sseqWAIT) {
+	choice(sseqWAIT_NoWait,"NoWait")
+	choice(sseqWAIT_Wait,"Wait")
+	choice(sseqWAIT_Wait1,"After1")
+	choice(sseqWAIT_Wait2,"After2")
+	choice(sseqWAIT_Wait3,"After3")
+	choice(sseqWAIT_Wait4,"After4")
+	choice(sseqWAIT_Wait5,"After5")
+	choice(sseqWAIT_Wait6,"After6")
+	choice(sseqWAIT_Wait7,"After7")
+	choice(sseqWAIT_Wait8,"After8")
+	choice(sseqWAIT_Wait9,"After9")
+	choice(sseqWAIT_Wait10,"AfterA")
+}
+menu(sseqLNKV) {
+	choice(sseqLNKV_EXT_NC,"Ext PV NC")
+	choice(sseqLNKV_EXT,"Ext PV OK")
+	choice(sseqLNKV_LOC,"Local PV")
+	choice(sseqLNKV_CON,"Constant")
+}
+recordtype(sseq) {
+	field(NAME,DBF_STRING) {
+		prompt("Record Name")
+		special(SPC_NOMOD)
+		size(61)
+	}
+	field(DESC,DBF_STRING) {
+		prompt("Descriptor")
+		promptgroup("10 - Common")
+		size(41)
+	}
+	field(ASG,DBF_STRING) {
+		prompt("Access Security Group")
+		promptgroup("10 - Common")
+		special(SPC_AS)
+		size(29)
+	}
+	field(SCAN,DBF_MENU) {
+		prompt("Scan Mechanism")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+		menu(menuScan)
+	}
+	field(PINI,DBF_MENU) {
+		prompt("Process at iocInit")
+		promptgroup("20 - Scan")
+		interest(1)
+		menu(menuPini)
+	}
+	field(PHAS,DBF_SHORT) {
+		prompt("Scan Phase")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+	}
+	field(EVNT,DBF_STRING) {
+		prompt("Event Name")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		size(40)
+		interest(1)
+	}
+	field(TSE,DBF_SHORT) {
+		prompt("Time Stamp Event")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(TSEL,DBF_INLINK) {
+		prompt("Time Stamp Link")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(DTYP,DBF_DEVICE) {
+		prompt("Device Type")
+		promptgroup("10 - Common")
+		interest(1)
+	}
+	field(DISV,DBF_SHORT) {
+		prompt("Disable Value")
+		promptgroup("20 - Scan")
+		initial("1")
+	}
+	field(DISA,DBF_SHORT) {
+		prompt("Disable")
+	}
+	field(SDIS,DBF_INLINK) {
+		prompt("Scanning Disable")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(MLOK,DBF_NOACCESS) {
+		prompt("Monitor lock")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("epicsMutexId        mlok")
+	}
+	field(MLIS,DBF_NOACCESS) {
+		prompt("Monitor List")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("ELLLIST             mlis")
+	}
+	field(BKLNK,DBF_NOACCESS) {
+		prompt("Backwards link tracking")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("ELLLIST             bklnk")
+	}
+	field(DISP,DBF_UCHAR) {
+		prompt("Disable putField")
+	}
+	field(PROC,DBF_UCHAR) {
+		prompt("Force Processing")
+		pp(TRUE)
+		interest(3)
+	}
+	field(STAT,DBF_MENU) {
+		prompt("Alarm Status")
+		special(SPC_NOMOD)
+		menu(menuAlarmStat)
+		initial("UDF")
+	}
+	field(SEVR,DBF_MENU) {
+		prompt("Alarm Severity")
+		special(SPC_NOMOD)
+		menu(menuAlarmSevr)
+	}
+	field(NSTA,DBF_MENU) {
+		prompt("New Alarm Status")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmStat)
+	}
+	field(NSEV,DBF_MENU) {
+		prompt("New Alarm Severity")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+	field(ACKS,DBF_MENU) {
+		prompt("Alarm Ack Severity")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+	field(ACKT,DBF_MENU) {
+		prompt("Alarm Ack Transient")
+		promptgroup("70 - Alarm")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuYesNo)
+		initial("YES")
+	}
+	field(DISS,DBF_MENU) {
+		prompt("Disable Alarm Sevrty")
+		promptgroup("70 - Alarm")
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LCNT,DBF_UCHAR) {
+		prompt("Lock Count")
+		special(SPC_NOMOD)
+		interest(2)
+	}
+	field(PACT,DBF_UCHAR) {
+		prompt("Record active")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(PUTF,DBF_UCHAR) {
+		prompt("dbPutField process")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(RPRO,DBF_UCHAR) {
+		prompt("Reprocess ")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(ASP,DBF_NOACCESS) {
+		prompt("Access Security Pvt")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct asgMember    *asp")
+	}
+	field(PPN,DBF_NOACCESS) {
+		prompt("pprocessNotify")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct processNotify *ppn")
+	}
+	field(PPNR,DBF_NOACCESS) {
+		prompt("pprocessNotifyRecord")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct processNotifyRecord *ppnr")
+	}
+	field(SPVT,DBF_NOACCESS) {
+		prompt("Scan Private")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct scan_element *spvt")
+	}
+	field(RSET,DBF_NOACCESS) {
+		prompt("Address of RSET")
+		special(SPC_NOMOD)
+		interest(4)
+        extra("struct typed_rset   *rset")
+	}
+	field(DSET,DBF_NOACCESS) {
+		prompt("DSET address")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct dset         *dset")
+	}
+	field(DPVT,DBF_NOACCESS) {
+		prompt("Device Private")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("void                *dpvt")
+	}
+	field(RDES,DBF_NOACCESS) {
+		prompt("Address of dbRecordType")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct dbRecordType *rdes")
+	}
+	field(LSET,DBF_NOACCESS) {
+		prompt("Lock Set")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct lockRecord   *lset")
+	}
+	field(PRIO,DBF_MENU) {
+		prompt("Scheduling Priority")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+		menu(menuPriority)
+	}
+	field(TPRO,DBF_UCHAR) {
+		prompt("Trace Processing")
+	}
+	field(BKPT,DBF_NOACCESS) {
+		prompt("Break Point")
+		special(SPC_NOMOD)
+		interest(1)
+		extra("char                bkpt")
+	}
+	field(UDF,DBF_UCHAR) {
+		prompt("Undefined")
+		promptgroup("10 - Common")
+		pp(TRUE)
+		interest(1)
+		initial("1")
+	}
+	field(UDFS,DBF_MENU) {
+		prompt("Undefined Alarm Sevrty")
+		promptgroup("70 - Alarm")
+		interest(1)
+		menu(menuAlarmSevr)
+		initial("INVALID")
+	}
+	field(TIME,DBF_NOACCESS) {
+		prompt("Time")
+		special(SPC_NOMOD)
+		interest(2)
+		extra("epicsTimeStamp      time")
+	}
+	field(FLNK,DBF_FWDLINK) {
+		prompt("Forward Process Link")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(VAL,DBF_LONG) {
+		prompt("Used to trigger")
+		asl(ASL0)
+		pp(TRUE)
+	}
+	field(SELM,DBF_MENU) {
+		prompt("Select Mechanism")
+		promptgroup(GUI_INPUTS)
+		interest(1)
+		menu(sseqSELM)
+	}
+	field(SELN,DBF_USHORT) {
+		prompt("Link Selection")
+		interest(1)
+		initial("1")
+	}
+	field(SELL,DBF_INLINK) {
+		prompt("Link Selection Loc")
+		promptgroup(GUI_INPUTS)
+		interest(1)
+	}
+	field(PREC,DBF_SHORT) {
+		prompt("Display Precision")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(DLY1,DBF_DOUBLE) {
+		prompt("Delay 1")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOL1,DBF_INLINK) {
+		prompt("Input link1")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DO1,DBF_DOUBLE) {
+		prompt("Constant input 1")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(LNK1,DBF_OUTLINK) {
+		prompt("Output Link 1")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(STR1,DBF_STRING) {
+		prompt("String value 1")
+		promptgroup(GUI_SEQ1)
+		interest(4)
+		size(40)
+		special(SPC_MOD)
+	}
+	field(DT1,DBF_SHORT) {
+		prompt("DOL link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(LT1,DBF_SHORT) {
+		prompt("LNK link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(WAIT1,DBF_MENU) {
+		prompt("Wait for completion?")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		menu(sseqWAIT)
+		special(SPC_MOD)
+	}
+	field(WERR1,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(WTG1,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(IX1,DBF_SHORT) {
+		interest(2)
+		initial(0)
+		special(SPC_NOMOD)
+	}
+	field(DOL1V,DBF_MENU) {
+		prompt("DOL LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(LNK1V,DBF_MENU) {
+		prompt("LNK LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(DLY2,DBF_DOUBLE) {
+		prompt("Delay 2")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOL2,DBF_INLINK) {
+		prompt("Input link 2")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DO2,DBF_DOUBLE) {
+		prompt("Constant input 2")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(LNK2,DBF_OUTLINK) {
+		prompt("Output Link 2")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(STR2,DBF_STRING) {
+		prompt("String value 2")
+		promptgroup(GUI_SEQ1)
+		interest(4)
+		size(40)
+		special(SPC_MOD)
+	}
+	field(DT2,DBF_SHORT) {
+		prompt("DOL link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(LT2,DBF_SHORT) {
+		prompt("LNK link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(WAIT2,DBF_MENU) {
+		prompt("Wait for completion?")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		menu(sseqWAIT)
+		special(SPC_MOD)
+	}
+	field(WERR2,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(WTG2,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(IX2,DBF_SHORT) {
+		interest(2)
+		initial(1)
+		special(SPC_NOMOD)
+	}
+	field(DOL2V,DBF_MENU) {
+		prompt("DOL LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(LNK2V,DBF_MENU) {
+		prompt("LNK LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(DLY3,DBF_DOUBLE) {
+		prompt("Delay 3")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOL3,DBF_INLINK) {
+		prompt("Input link 3")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DO3,DBF_DOUBLE) {
+		prompt("Constant input 3")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(LNK3,DBF_OUTLINK) {
+		prompt("Output Link 3")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(STR3,DBF_STRING) {
+		prompt("String value 3")
+		promptgroup(GUI_SEQ1)
+		interest(4)
+		size(40)
+		special(SPC_MOD)
+	}
+	field(DT3,DBF_SHORT) {
+		prompt("DOL link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(LT3,DBF_SHORT) {
+		prompt("LNK link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(WAIT3,DBF_MENU) {
+		prompt("Wait for completion?")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		menu(sseqWAIT)
+		special(SPC_MOD)
+	}
+	field(WERR3,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(WTG3,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(IX3,DBF_SHORT) {
+		interest(2)
+		initial(2)
+		special(SPC_NOMOD)
+	}
+	field(DOL3V,DBF_MENU) {
+		prompt("DOL LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(LNK3V,DBF_MENU) {
+		prompt("LNK LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(DLY4,DBF_DOUBLE) {
+		prompt("Delay 4")
+		promptgroup(GUI_SEQ2)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOL4,DBF_INLINK) {
+		prompt("Input link 4")
+		promptgroup(GUI_SEQ2)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DO4,DBF_DOUBLE) {
+		prompt("Constant input 4")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(LNK4,DBF_OUTLINK) {
+		prompt("Output Link 4")
+		promptgroup(GUI_SEQ2)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(STR4,DBF_STRING) {
+		prompt("String value 4")
+		promptgroup(GUI_SEQ1)
+		interest(4)
+		size(40)
+		special(SPC_MOD)
+	}
+	field(DT4,DBF_SHORT) {
+		prompt("DOL link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(LT4,DBF_SHORT) {
+		prompt("LNK link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(WAIT4,DBF_MENU) {
+		prompt("Wait for completion?")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		menu(sseqWAIT)
+		special(SPC_MOD)
+	}
+	field(WERR4,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(WTG4,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(IX4,DBF_SHORT) {
+		interest(2)
+		initial(3)
+		special(SPC_NOMOD)
+	}
+	field(DOL4V,DBF_MENU) {
+		prompt("DOL LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(LNK4V,DBF_MENU) {
+		prompt("LNK LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(DLY5,DBF_DOUBLE) {
+		prompt("Delay 5")
+		promptgroup(GUI_SEQ2)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOL5,DBF_INLINK) {
+		prompt("Input link 5")
+		promptgroup(GUI_SEQ2)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DO5,DBF_DOUBLE) {
+		prompt("Constant input 5")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(LNK5,DBF_OUTLINK) {
+		prompt("Output Link 5")
+		promptgroup(GUI_SEQ2)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(STR5,DBF_STRING) {
+		prompt("String value 5")
+		promptgroup(GUI_SEQ1)
+		interest(4)
+		size(40)
+		special(SPC_MOD)
+	}
+	field(DT5,DBF_SHORT) {
+		prompt("DOL link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(LT5,DBF_SHORT) {
+		prompt("LNK link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(WAIT5,DBF_MENU) {
+		prompt("Wait for completion?")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		menu(sseqWAIT)
+		special(SPC_MOD)
+	}
+	field(WERR5,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(WTG5,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(IX5,DBF_SHORT) {
+		interest(2)
+		initial(4)
+		special(SPC_NOMOD)
+	}
+	field(DOL5V,DBF_MENU) {
+		prompt("DOL LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(LNK5V,DBF_MENU) {
+		prompt("LNK LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(DLY6,DBF_DOUBLE) {
+		prompt("Delay 6")
+		promptgroup(GUI_SEQ2)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOL6,DBF_INLINK) {
+		prompt("Input link 6")
+		promptgroup(GUI_SEQ2)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DO6,DBF_DOUBLE) {
+		prompt("Constant input 6")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(LNK6,DBF_OUTLINK) {
+		prompt("Output Link 6")
+		promptgroup(GUI_SEQ2)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(STR6,DBF_STRING) {
+		prompt("String value 6")
+		promptgroup(GUI_SEQ1)
+		interest(4)
+		size(40)
+		special(SPC_MOD)
+	}
+	field(DT6,DBF_SHORT) {
+		prompt("DOL link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(LT6,DBF_SHORT) {
+		prompt("LNK link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(WAIT6,DBF_MENU) {
+		prompt("Wait for completion?")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		menu(sseqWAIT)
+		special(SPC_MOD)
+	}
+	field(WERR6,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(WTG6,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(IX6,DBF_SHORT) {
+		interest(2)
+		initial(5)
+		special(SPC_NOMOD)
+	}
+	field(DOL6V,DBF_MENU) {
+		prompt("DOL LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(LNK6V,DBF_MENU) {
+		prompt("LNK LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(DLY7,DBF_DOUBLE) {
+		prompt("Delay 7")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOL7,DBF_INLINK) {
+		prompt("Input link 7")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DO7,DBF_DOUBLE) {
+		prompt("Constant input 7")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(LNK7,DBF_OUTLINK) {
+		prompt("Output Link 7")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(STR7,DBF_STRING) {
+		prompt("String value 7")
+		promptgroup(GUI_SEQ1)
+		interest(4)
+		size(40)
+		special(SPC_MOD)
+	}
+	field(DT7,DBF_SHORT) {
+		prompt("DOL link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(LT7,DBF_SHORT) {
+		prompt("LNK link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(WAIT7,DBF_MENU) {
+		prompt("Wait for completion?")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		menu(sseqWAIT)
+		special(SPC_MOD)
+	}
+	field(WERR7,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(WTG7,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(IX7,DBF_SHORT) {
+		interest(2)
+		initial(6)
+		special(SPC_NOMOD)
+	}
+	field(DOL7V,DBF_MENU) {
+		prompt("DOL LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(LNK7V,DBF_MENU) {
+		prompt("LNK LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(DLY8,DBF_DOUBLE) {
+		prompt("Delay 8")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOL8,DBF_INLINK) {
+		prompt("Input link 8")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DO8,DBF_DOUBLE) {
+		prompt("Constant input 8")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(LNK8,DBF_OUTLINK) {
+		prompt("Output Link 8")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(STR8,DBF_STRING) {
+		prompt("String value 8")
+		promptgroup(GUI_SEQ1)
+		interest(4)
+		size(40)
+		special(SPC_MOD)
+	}
+	field(DT8,DBF_SHORT) {
+		prompt("DOL link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(LT8,DBF_SHORT) {
+		prompt("LNK link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(WAIT8,DBF_MENU) {
+		prompt("Wait for completion?")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		menu(sseqWAIT)
+		special(SPC_MOD)
+	}
+	field(WERR8,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(WTG8,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(IX8,DBF_SHORT) {
+		interest(2)
+		initial(7)
+		special(SPC_NOMOD)
+	}
+	field(DOL8V,DBF_MENU) {
+		prompt("DOL LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(LNK8V,DBF_MENU) {
+		prompt("LNK LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(DLY9,DBF_DOUBLE) {
+		prompt("Delay 9")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOL9,DBF_INLINK) {
+		prompt("Input link 9")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DO9,DBF_DOUBLE) {
+		prompt("Constant input 9")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(LNK9,DBF_OUTLINK) {
+		prompt("Output Link 9")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(STR9,DBF_STRING) {
+		prompt("String value 9")
+		promptgroup(GUI_SEQ1)
+		interest(4)
+		size(40)
+		special(SPC_MOD)
+	}
+	field(DT9,DBF_SHORT) {
+		prompt("DOL link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(LT9,DBF_SHORT) {
+		prompt("LNK link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(WAIT9,DBF_MENU) {
+		prompt("Wait for completion?")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		menu(sseqWAIT)
+		special(SPC_MOD)
+	}
+	field(WERR9,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(WTG9,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(IX9,DBF_SHORT) {
+		interest(2)
+		initial(8)
+		special(SPC_NOMOD)
+	}
+	field(DOL9V,DBF_MENU) {
+		prompt("DOL LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(LNK9V,DBF_MENU) {
+		prompt("LNK LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(DLYA,DBF_DOUBLE) {
+		prompt("Delay 10")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOLA,DBF_INLINK) {
+		prompt("Input link 10")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(DOA,DBF_DOUBLE) {
+		prompt("Constant input 10")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(LNKA,DBF_OUTLINK) {
+		prompt("Output Link 10")
+		promptgroup(GUI_SEQ3)
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(STRA,DBF_STRING) {
+		prompt("String value A")
+		promptgroup(GUI_SEQ1)
+		interest(4)
+		size(40)
+		special(SPC_MOD)
+	}
+	field(DTA,DBF_SHORT) {
+		prompt("DOL link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(LTA,DBF_SHORT) {
+		prompt("LNK link type")
+		interest(4)
+		special(SPC_NOMOD)
+	}
+	field(WAITA,DBF_MENU) {
+		prompt("Wait for completion?")
+		promptgroup(GUI_SEQ1)
+		interest(1)
+		menu(sseqWAIT)
+		special(SPC_MOD)
+	}
+	field(WERRA,DBF_SHORT) {
+		interest(1)
+		special(SPC_NOMOD)
+	}
+	field(WTGA,DBF_SHORT) {
+		interest(1)
+	}
+	field(IXA,DBF_SHORT) {
+		interest(2)
+		initial(9)
+	}
+	field(DOLAV,DBF_MENU) {
+		prompt("DOL LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(LNKAV,DBF_MENU) {
+		prompt("LNK LINK Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(sseqLNKV)
+		initial("1")
+	}
+	field(ABORT,DBF_SHORT) {
+		prompt("Abort sequence")
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(ABORTING,DBF_SHORT) {
+		prompt("Aborting")
+		interest(1)
+		special(SPC_MOD)
+	}
+	field(BUSY,DBF_SHORT) {
+		prompt("Sequence active")
+		interest(1)
+		special(SPC_NOMOD)
+	}
+}
+device(scalcout,CONSTANT,devsCalcoutSoft,"Soft Channel")
+device(acalcout,CONSTANT,devaCalcoutSoft,"Soft Channel")
+variable(debugSubAve,int)
+registrar(subAveRegister)
+variable(sCalcPostfixDebug,int)
+variable(sCalcPerformDebug,int)
+variable(sCalcoutRecordDebug,int)
+variable(devsCalcoutSoftDebug,int)
+variable(sCalcStackHW,int)
+variable(sCalcStackLW,int)
+variable(sCalcLoopMax,int)
+variable(aCalcPostfixDebug,int)
+variable(aCalcPerformDebug,int)
+variable(aCalcoutRecordDebug,int)
+variable(devaCalcoutSoftDebug,int)
+variable(aCalcLoopMax,int)
+variable(aCalcAsyncThreshold,int)
+variable(transformRecordDebug,int)
+variable(interpDebug,int)
+registrar(interpRegister)
+variable(arrayTestDebug,int)
+registrar(arrayTestRegister)
+variable(sseqRecDebug,int)
+registrar(aCalcMonitorMemRegister)
+variable(aCalcMonitorMem_debug)
+registrar(acalcTotalAllocatedMemoryRegister)
+registrar(editSseqRegistrar)
+menu(swaitOOPT) {
+    choice(swaitOOPT_Every_Time,"Every Time")
+	choice(swaitOOPT_On_Change,"On Change")
+	choice(swaitOOPT_When_Zero,"When Zero")
+	choice(swaitOOPT_When_Non_zero,"When Non-zero")
+	choice(swaitOOPT_Transition_To_Zero,"Transition To Zero")
+	choice(swaitOOPT_Transition_To_Non_zero,"Transition To Non-zero")
+	choice(swaitOOPT_Never,"Never")
+}
+menu(swaitDOPT) {
+	choice(swaitDOPT_Use_VAL,"Use VAL")
+	choice(swaitDOPT_Use_DOL,"Use DOL")
+}
+menu(swaitINAP) {
+	choice(swaitINAP_No,"No")
+	choice(swaitINAP_Yes,"Yes")
+}
+menu(swaitINAV) {
+	choice(swaitINAV_PV_OK,"PV OK")
+	choice(swaitINAV_PV_BAD,"PV BAD")
+	choice(swaitINAV_No_PV,"No PV")
+}
+recordtype(swait) {
+	field(NAME,DBF_STRING) {
+		prompt("Record Name")
+		special(SPC_NOMOD)
+		size(61)
+	}
+	field(DESC,DBF_STRING) {
+		prompt("Descriptor")
+		promptgroup("10 - Common")
+		size(41)
+	}
+	field(ASG,DBF_STRING) {
+		prompt("Access Security Group")
+		promptgroup("10 - Common")
+		special(SPC_AS)
+		size(29)
+	}
+	field(SCAN,DBF_MENU) {
+		prompt("Scan Mechanism")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+		menu(menuScan)
+	}
+	field(PINI,DBF_MENU) {
+		prompt("Process at iocInit")
+		promptgroup("20 - Scan")
+		interest(1)
+		menu(menuPini)
+	}
+	field(PHAS,DBF_SHORT) {
+		prompt("Scan Phase")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+	}
+	field(EVNT,DBF_STRING) {
+		prompt("Event Name")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		size(40)
+		interest(1)
+	}
+	field(TSE,DBF_SHORT) {
+		prompt("Time Stamp Event")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(TSEL,DBF_INLINK) {
+		prompt("Time Stamp Link")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(DTYP,DBF_DEVICE) {
+		prompt("Device Type")
+		promptgroup("10 - Common")
+		interest(1)
+	}
+	field(DISV,DBF_SHORT) {
+		prompt("Disable Value")
+		promptgroup("20 - Scan")
+		initial("1")
+	}
+	field(DISA,DBF_SHORT) {
+		prompt("Disable")
+	}
+	field(SDIS,DBF_INLINK) {
+		prompt("Scanning Disable")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(MLOK,DBF_NOACCESS) {
+		prompt("Monitor lock")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("epicsMutexId        mlok")
+	}
+	field(MLIS,DBF_NOACCESS) {
+		prompt("Monitor List")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("ELLLIST             mlis")
+	}
+	field(BKLNK,DBF_NOACCESS) {
+		prompt("Backwards link tracking")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("ELLLIST             bklnk")
+	}
+	field(DISP,DBF_UCHAR) {
+		prompt("Disable putField")
+	}
+	field(PROC,DBF_UCHAR) {
+		prompt("Force Processing")
+		pp(TRUE)
+		interest(3)
+	}
+	field(STAT,DBF_MENU) {
+		prompt("Alarm Status")
+		special(SPC_NOMOD)
+		menu(menuAlarmStat)
+		initial("UDF")
+	}
+	field(SEVR,DBF_MENU) {
+		prompt("Alarm Severity")
+		special(SPC_NOMOD)
+		menu(menuAlarmSevr)
+	}
+	field(NSTA,DBF_MENU) {
+		prompt("New Alarm Status")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmStat)
+	}
+	field(NSEV,DBF_MENU) {
+		prompt("New Alarm Severity")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+	field(ACKS,DBF_MENU) {
+		prompt("Alarm Ack Severity")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+	field(ACKT,DBF_MENU) {
+		prompt("Alarm Ack Transient")
+		promptgroup("70 - Alarm")
+		special(SPC_NOMOD)
+		interest(2)
+		menu(menuYesNo)
+		initial("YES")
+	}
+	field(DISS,DBF_MENU) {
+		prompt("Disable Alarm Sevrty")
+		promptgroup("70 - Alarm")
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LCNT,DBF_UCHAR) {
+		prompt("Lock Count")
+		special(SPC_NOMOD)
+		interest(2)
+	}
+	field(PACT,DBF_UCHAR) {
+		prompt("Record active")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(PUTF,DBF_UCHAR) {
+		prompt("dbPutField process")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(RPRO,DBF_UCHAR) {
+		prompt("Reprocess ")
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(ASP,DBF_NOACCESS) {
+		prompt("Access Security Pvt")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct asgMember    *asp")
+	}
+	field(PPN,DBF_NOACCESS) {
+		prompt("pprocessNotify")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct processNotify *ppn")
+	}
+	field(PPNR,DBF_NOACCESS) {
+		prompt("pprocessNotifyRecord")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct processNotifyRecord *ppnr")
+	}
+	field(SPVT,DBF_NOACCESS) {
+		prompt("Scan Private")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct scan_element *spvt")
+	}
+	field(RSET,DBF_NOACCESS) {
+		prompt("Address of RSET")
+		special(SPC_NOMOD)
+		interest(4)
+        extra("struct typed_rset   *rset")
+	}
+	field(DSET,DBF_NOACCESS) {
+		prompt("DSET address")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct dset         *dset")
+	}
+	field(DPVT,DBF_NOACCESS) {
+		prompt("Device Private")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("void                *dpvt")
+	}
+	field(RDES,DBF_NOACCESS) {
+		prompt("Address of dbRecordType")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct dbRecordType *rdes")
+	}
+	field(LSET,DBF_NOACCESS) {
+		prompt("Lock Set")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("struct lockRecord   *lset")
+	}
+	field(PRIO,DBF_MENU) {
+		prompt("Scheduling Priority")
+		promptgroup("20 - Scan")
+		special(SPC_SCAN)
+		interest(1)
+		menu(menuPriority)
+	}
+	field(TPRO,DBF_UCHAR) {
+		prompt("Trace Processing")
+	}
+	field(BKPT,DBF_NOACCESS) {
+		prompt("Break Point")
+		special(SPC_NOMOD)
+		interest(1)
+		extra("char                bkpt")
+	}
+	field(UDF,DBF_UCHAR) {
+		prompt("Undefined")
+		promptgroup("10 - Common")
+		pp(TRUE)
+		interest(1)
+		initial("1")
+	}
+	field(UDFS,DBF_MENU) {
+		prompt("Undefined Alarm Sevrty")
+		promptgroup("70 - Alarm")
+		interest(1)
+		menu(menuAlarmSevr)
+		initial("INVALID")
+	}
+	field(TIME,DBF_NOACCESS) {
+		prompt("Time")
+		special(SPC_NOMOD)
+		interest(2)
+		extra("epicsTimeStamp      time")
+	}
+	field(FLNK,DBF_FWDLINK) {
+		prompt("Forward Process Link")
+		promptgroup("20 - Scan")
+		interest(1)
+	}
+	field(VERS,DBF_FLOAT) {
+		prompt("Code Version")
+		special(SPC_NOMOD)
+		initial("1")
+	}
+	field(HOPR,DBF_FLOAT) {
+		prompt("High Operating Range")
+		promptgroup(GUI_ALARMS)
+		asl(ASL0)
+		interest(1)
+	}
+	field(LOPR,DBF_FLOAT) {
+		prompt("Low Operating Range")
+		promptgroup(GUI_BITS1)
+		asl(ASL0)
+		interest(1)
+	}
+	field(INIT,DBF_SHORT) {
+		prompt("Initialized?")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(CBST,DBF_NOACCESS) {
+		prompt("Pointer to cbStruct")
+		special(SPC_NOMOD)
+		interest(4)
+		size(4)
+		extra("void *         cbst")
+	}
+	field(INAN,DBF_STRING) {
+		prompt("INPA PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INBN,DBF_STRING) {
+		prompt("INPB PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INCN,DBF_STRING) {
+		prompt("INPC PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INDN,DBF_STRING) {
+		prompt("INPD PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INEN,DBF_STRING) {
+		prompt("INPE PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INFN,DBF_STRING) {
+		prompt("INPF PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INGN,DBF_STRING) {
+		prompt("INPG PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INHN,DBF_STRING) {
+		prompt("INPH PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(ININ,DBF_STRING) {
+		prompt("INPI PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INJN,DBF_STRING) {
+		prompt("INPJ PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INKN,DBF_STRING) {
+		prompt("INPK PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INLN,DBF_STRING) {
+		prompt("INPL PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(DOLN,DBF_STRING) {
+		prompt("DOL  PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(OUTN,DBF_STRING) {
+		prompt("OUT  PV Name")
+		promptgroup(GUI_CALC)
+		asl(ASL0)
+		special(SPC_MOD)
+		interest(1)
+		size(40)
+	}
+	field(INAV,DBF_MENU) {
+		prompt("INPA PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INBV,DBF_MENU) {
+		prompt("INPB PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INCV,DBF_MENU) {
+		prompt("INPC PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INDV,DBF_MENU) {
+		prompt("INPD PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INEV,DBF_MENU) {
+		prompt("INPE PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INFV,DBF_MENU) {
+		prompt("INPF PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INGV,DBF_MENU) {
+		prompt("INPG PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INHV,DBF_MENU) {
+		prompt("INPH PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INIV,DBF_MENU) {
+		prompt("INPI PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INJV,DBF_MENU) {
+		prompt("INPJ PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INKV,DBF_MENU) {
+		prompt("INPK PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(INLV,DBF_MENU) {
+		prompt("INPL PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(DOLV,DBF_MENU) {
+		prompt("DOL  PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(OUTV,DBF_MENU) {
+		prompt("OUT  PV Status")
+		special(SPC_NOMOD)
+		interest(1)
+		menu(swaitINAV)
+	}
+	field(A,DBF_DOUBLE) {
+		prompt("Value of Input A")
+		pp(TRUE)
+	}
+	field(B,DBF_DOUBLE) {
+		prompt("Value of Input B")
+		pp(TRUE)
+	}
+	field(C,DBF_DOUBLE) {
+		prompt("Value of Input C")
+		pp(TRUE)
+	}
+	field(D,DBF_DOUBLE) {
+		prompt("Value of Input D")
+		pp(TRUE)
+	}
+	field(E,DBF_DOUBLE) {
+		prompt("Value of Input E")
+		pp(TRUE)
+	}
+	field(F,DBF_DOUBLE) {
+		prompt("Value of Input F")
+		pp(TRUE)
+	}
+	field(G,DBF_DOUBLE) {
+		prompt("Value of Input G")
+		pp(TRUE)
+	}
+	field(H,DBF_DOUBLE) {
+		prompt("Value of Input H")
+		pp(TRUE)
+	}
+	field(I,DBF_DOUBLE) {
+		prompt("Value of Input I")
+		pp(TRUE)
+	}
+	field(J,DBF_DOUBLE) {
+		prompt("Value of Input J")
+		pp(TRUE)
+	}
+	field(K,DBF_DOUBLE) {
+		prompt("Value of Input K")
+		pp(TRUE)
+	}
+	field(L,DBF_DOUBLE) {
+		prompt("Value of Input L")
+		pp(TRUE)
+	}
+	field(LA,DBF_DOUBLE) {
+		prompt("Last Val of Input A")
+	}
+	field(LB,DBF_DOUBLE) {
+		prompt("Last Val of Input B")
+	}
+	field(LC,DBF_DOUBLE) {
+		prompt("Last Val of Input C")
+	}
+	field(LD,DBF_DOUBLE) {
+		prompt("Last Val of Input D")
+	}
+	field(LE,DBF_DOUBLE) {
+		prompt("Last Val of Input E")
+	}
+	field(LF,DBF_DOUBLE) {
+		prompt("Last Val of Input F")
+	}
+	field(LG,DBF_DOUBLE) {
+		prompt("Last Val of Input G")
+	}
+	field(LH,DBF_DOUBLE) {
+		prompt("Last Val of Input H")
+	}
+	field(LI,DBF_DOUBLE) {
+		prompt("Last Val of Input I")
+	}
+	field(LJ,DBF_DOUBLE) {
+		prompt("Last Val of Input J")
+	}
+	field(LK,DBF_DOUBLE) {
+		prompt("Last Val of Input K")
+	}
+	field(LL,DBF_DOUBLE) {
+		prompt("Last Val of Input L")
+	}
+	field(INAP,DBF_MENU) {
+		prompt("INPA causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INBP,DBF_MENU) {
+		prompt("INPB causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INCP,DBF_MENU) {
+		prompt("INPC causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INDP,DBF_MENU) {
+		prompt("INPD causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INEP,DBF_MENU) {
+		prompt("INPE causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INFP,DBF_MENU) {
+		prompt("INPF causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INGP,DBF_MENU) {
+		prompt("INPG causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INHP,DBF_MENU) {
+		prompt("INPH causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INIP,DBF_MENU) {
+		prompt("INPI causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INJP,DBF_MENU) {
+		prompt("INPJ causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INKP,DBF_MENU) {
+		prompt("INPK causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(INLP,DBF_MENU) {
+		prompt("INPL causes I/O INTR")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitINAP)
+		initial("Yes")
+	}
+	field(CALC,DBF_STRING) {
+		prompt("Calculation")
+		promptgroup(GUI_CLOCK)
+		asl(ASL0)
+		special(SPC_CALC)
+		size(36)
+		initial("0")
+	}
+	field(RPCL,DBF_NOACCESS) {
+		prompt("Reverse Polish Calc")
+		special(SPC_NOMOD)
+		interest(4)
+		size(184)
+		extra("char    rpcl[184]")
+	}
+	field(CLCV,DBF_LONG) {
+		prompt("CALC Valid")
+		interest(1)
+	}
+	field(VAL,DBF_DOUBLE) {
+		prompt("Value Field")
+	}
+	field(OVAL,DBF_DOUBLE) {
+		prompt("Old Value")
+	}
+	field(PREC,DBF_SHORT) {
+		prompt("Display Precision")
+		promptgroup(GUI_COMMON)
+		interest(1)
+	}
+	field(OOPT,DBF_MENU) {
+		prompt("Output Execute Opt")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitOOPT)
+	}
+	field(ODLY,DBF_FLOAT) {
+		prompt("Output Execute Delay")
+		promptgroup(GUI_ALARMS)
+		asl(ASL0)
+		interest(1)
+	}
+	field(DOPT,DBF_MENU) {
+		prompt("Output Data Option")
+		promptgroup(GUI_CALC)
+		interest(1)
+		menu(swaitDOPT)
+	}
+	field(DOLD,DBF_DOUBLE) {
+		prompt("Desired Output Data")
+		promptgroup(GUI_CLOCK)
+		asl(ASL0)
+		interest(1)
+	}
+	field(OEVT,DBF_USHORT) {
+		prompt("Event To Issue")
+		promptgroup(GUI_CLOCK)
+		asl(ASL0)
+	}
+	field(ADEL,DBF_DOUBLE) {
+		prompt("Archive Deadband")
+		promptgroup(GUI_CLOCK)
+		interest(1)
+	}
+	field(MDEL,DBF_DOUBLE) {
+		prompt("Monitor Deadband")
+		promptgroup(GUI_CLOCK)
+		interest(1)
+	}
+	field(ALST,DBF_DOUBLE) {
+		prompt("Last Value Archived")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(MLST,DBF_DOUBLE) {
+		prompt("Last Val Monitored")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(SIOL,DBF_INLINK) {
+		prompt("Sim Input Specifctn")
+		promptgroup(GUI_PULSE)
+		interest(1)
+	}
+	field(SVAL,DBF_DOUBLE) {
+		prompt("Simulation Value")
+	}
+	field(SIML,DBF_INLINK) {
+		prompt("Sim Mode Location")
+		promptgroup(GUI_PULSE)
+		interest(1)
+	}
+	field(SIMM,DBF_MENU) {
+		prompt("Simulation Mode")
+		interest(1)
+		menu(menuYesNo)
+	}
+	field(SIMS,DBF_MENU) {
+		prompt("Sim mode Alarm Svrty")
+		promptgroup(GUI_SELECT)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+}
+device(swait,CONSTANT,devSWaitIoEvent,"Soft Channel")
+variable(swaitRecordDebug,int)
+registrar(editSseqRegistrar)

@@ -1,0 +1,6 @@
+registrar(requireRegister)
+variable(requireDebug,int)
+registrar(runScriptRegister)
+variable(runScriptDebug,int)
+variable(exprDebug,int)
+registrar(dbLoadTemplateRegister)
