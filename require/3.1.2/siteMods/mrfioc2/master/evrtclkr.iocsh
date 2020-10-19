@@ -1,6 +1,4 @@
-# .run.iocsh
-# ==========
-
+#!
 # Configure CLKA backplane clock
 # ==============================
 ### Set TCLKA to low, enable it and power it up
@@ -43,5 +41,3 @@ dbpf "$(P)$(R=)$(S=:)OutTCLKA-Pat-Low16_31-SP.B3" "1"
 dbpf "$(P)$(R=)$(S=:)OutTCLKA-Pat-Low16_31-SP.B2" "1"
 dbpf "$(P)$(R=)$(S=:)OutTCLKA-Pat-Low16_31-SP.B1" "1"
 dbpf "$(P)$(R=)$(S=:)OutTCLKA-Pat-Low16_31-SP.B0" "1"
-
-#EOF

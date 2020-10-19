@@ -1,4 +1,4 @@
-
+#!
 # Set up the prescaler that will trigger the sequencer at 14 Hz ###
 dbpf "$(P)$(R=)$(S=:)PS0-Div-SP" "$(MXC_14HZ=6289464)"
 

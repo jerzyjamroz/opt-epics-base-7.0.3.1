@@ -1,7 +1,6 @@
 # .template
 
-record(longin, "$(P)$(R=)$(PV)") {
+record(longin, "$(P)$(R=)$(S=:)$(PV)") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(P)$(R=)dbus-u32indx$(INDEX)-subA_ CPP")
+  field(INP, "$(P)$(R=)$(S=:)dbus-u32indx$(INDEX)-subA_ CPP")
 }
-#EOL

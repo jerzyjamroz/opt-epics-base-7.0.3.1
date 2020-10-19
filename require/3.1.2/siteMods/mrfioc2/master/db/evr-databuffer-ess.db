@@ -1,179 +1,153 @@
 # Init subA_ for the databuffer records
 
-record(subArray, "$(PREFIX)dbus-u32indx0-subA_") {
+record(subArray, "$(P):dbus-u32indx0-subA_") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-recv-u32 CPP")
+  field(INP, "$(P):dbus-recv-u32 CPP")
   field(INDX, "0")
   field(NELM, "1") # "2046")
   field(MALM, "1") # "2046")
   field(FTVL, "ULONG")
 }
+# Init subA_ for the databuffer records
 
-#EOL# Init subA_ for the databuffer records
-
-record(subArray, "$(PREFIX)dbus-u32indx1-subA_") {
+record(subArray, "$(P):dbus-u32indx1-subA_") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-recv-u32 CPP")
+  field(INP, "$(P):dbus-recv-u32 CPP")
   field(INDX, "1")
   field(NELM, "1") # "2046")
   field(MALM, "2") # "2046")
   field(FTVL, "ULONG")
 }
+# Init subA_ for the databuffer records
 
-#EOL# Init subA_ for the databuffer records
-
-record(subArray, "$(PREFIX)dbus-u32indx2-subA_") {
+record(subArray, "$(P):dbus-u32indx2-subA_") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-recv-u32 CPP")
+  field(INP, "$(P):dbus-recv-u32 CPP")
   field(INDX, "2")
   field(NELM, "1") # "2046")
   field(MALM, "3") # "2046")
   field(FTVL, "ULONG")
 }
+# Init subA_ for the databuffer records
 
-#EOL# Init subA_ for the databuffer records
-
-record(subArray, "$(PREFIX)dbus-u32indx3-subA_") {
+record(subArray, "$(P):dbus-u32indx3-subA_") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-recv-u32 CPP")
+  field(INP, "$(P):dbus-recv-u32 CPP")
   field(INDX, "3")
   field(NELM, "1") # "2046")
   field(MALM, "4") # "2046")
   field(FTVL, "ULONG")
 }
+# Init subA_ for the databuffer records
 
-#EOL# Init subA_ for the databuffer records
-
-record(subArray, "$(PREFIX)dbus-u32indx4-subA_") {
+record(subArray, "$(P):dbus-u32indx4-subA_") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-recv-u32 CPP")
+  field(INP, "$(P):dbus-recv-u32 CPP")
   field(INDX, "4")
   field(NELM, "1") # "2046")
   field(MALM, "5") # "2046")
   field(FTVL, "ULONG")
 }
+# Init subA_ for the databuffer records
 
-#EOL# Init subA_ for the databuffer records
-
-record(subArray, "$(PREFIX)dbus-u32indx5-subA_") {
+record(subArray, "$(P):dbus-u32indx5-subA_") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-recv-u32 CPP")
+  field(INP, "$(P):dbus-recv-u32 CPP")
   field(INDX, "5")
   field(NELM, "1") # "2046")
   field(MALM, "6") # "2046")
   field(FTVL, "ULONG")
 }
+# Init subA_ for the databuffer records
 
-#EOL# Init subA_ for the databuffer records
-
-record(subArray, "$(PREFIX)dbus-u32indx6-subA_") {
+record(subArray, "$(P):dbus-u32indx6-subA_") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-recv-u32 CPP")
+  field(INP, "$(P):dbus-recv-u32 CPP")
   field(INDX, "6")
   field(NELM, "1") # "2046")
   field(MALM, "7") # "2046")
   field(FTVL, "ULONG")
 }
+# Init subA_ for the databuffer records
 
-#EOL# Init subA_ for the databuffer records
-
-record(subArray, "$(PREFIX)dbus-u32indx7-subA_") {
+record(subArray, "$(P):dbus-u32indx7-subA_") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-recv-u32 CPP")
+  field(INP, "$(P):dbus-recv-u32 CPP")
   field(INDX, "7")
   field(NELM, "1") # "2046")
   field(MALM, "8") # "2046")
   field(FTVL, "ULONG")
 }
+# .template
 
-#EOL# .template
-
-record(calcout, "$(PREFIX)ProtNum") {
-  field(INPA, "$(PREFIX)dbus-u32indx0-subA_ CPP")
+record(calcout, "$(P):ProtNum") {
+  field(INPA, "$(P):dbus-u32indx0-subA_ CPP")
   field(SCAN, "Passive")
   field(CALC, "(A>>(0*8))&255")
 }
-
-#EOL
 # .template
 
-record(calcout, "$(PREFIX)ProtVer") {
-  field(INPA, "$(PREFIX)dbus-u32indx0-subA_ CPP")
+record(calcout, "$(P):ProtVer") {
+  field(INPA, "$(P):dbus-u32indx0-subA_ CPP")
   field(SCAN, "Passive")
   field(CALC, "(A>>(2*8))&255")
 }
-
-#EOL
 # .template
 
-record(calcout, "$(PREFIX)PBState") {
-  field(INPA, "$(PREFIX)dbus-u32indx3-subA_ CPP")
+record(calcout, "$(P):PBState") {
+  field(INPA, "$(P):dbus-u32indx3-subA_ CPP")
   field(SCAN, "Passive")
   field(CALC, "(A>>(0*8))&255")
 }
-
-#EOL
 # .template
 
-record(calcout, "$(PREFIX)PBDest") {
-  field(INPA, "$(PREFIX)dbus-u32indx3-subA_ CPP")
+record(calcout, "$(P):PBDest") {
+  field(INPA, "$(P):dbus-u32indx3-subA_ CPP")
   field(SCAN, "Passive")
   field(CALC, "(A>>(1*8))&255")
 }
-
-#EOL
 # .template
 
-record(calcout, "$(PREFIX)PBMod") {
-  field(INPA, "$(PREFIX)dbus-u32indx3-subA_ CPP")
+record(calcout, "$(P):PBMod") {
+  field(INPA, "$(P):dbus-u32indx3-subA_ CPP")
   field(SCAN, "Passive")
   field(CALC, "(A>>(2*8))&255")
 }
-
-#EOL
 # .template
 
-record(calcout, "$(PREFIX)TgRast") {
-  field(INPA, "$(PREFIX)dbus-u32indx7-subA_ CPP")
+record(calcout, "$(P):TgRast") {
+  field(INPA, "$(P):dbus-u32indx7-subA_ CPP")
   field(SCAN, "Passive")
   field(CALC, "(A>>(0*8))&255")
 }
-
-#EOL
 # .template
 
-record(calcout, "$(PREFIX)TgSeg") {
-  field(INPA, "$(PREFIX)dbus-u32indx7-subA_ CPP")
+record(calcout, "$(P):TgSeg") {
+  field(INPA, "$(P):dbus-u32indx7-subA_ CPP")
   field(SCAN, "Passive")
   field(CALC, "(A>>(1*8))&255")
 }
-
-#EOL
 # .template
 
-record(longin, "$(PREFIX)IdCycle") {
+record(longin, "$(P):IdCycle") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-u32indx1-subA_ CPP")
+  field(INP, "$(P):dbus-u32indx1-subA_ CPP")
 }
-#EOL
 # .template
 
-record(longin, "$(PREFIX)PBLen") {
+record(longin, "$(P):PBLen") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-u32indx4-subA_ CPP")
+  field(INP, "$(P):dbus-u32indx4-subA_ CPP")
 }
-#EOL
 # .template
 
-record(longin, "$(PREFIX)PBEn") {
+record(longin, "$(P):PBEn") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-u32indx5-subA_ CPP")
+  field(INP, "$(P):dbus-u32indx5-subA_ CPP")
 }
-#EOL
 # .template
 
-record(longin, "$(PREFIX)PBCurr") {
+record(longin, "$(P):PBCurr") {
   field(DTYP, "Soft Channel")
-  field(INP, "$(PREFIX)dbus-u32indx6-subA_ CPP")
+  field(INP, "$(P):dbus-u32indx6-subA_ CPP")
 }
-#EOL

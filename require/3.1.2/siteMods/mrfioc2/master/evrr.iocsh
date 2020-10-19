@@ -1,6 +1,4 @@
-# .run.iocsh
-# ==========
-
+#!
 # Enable EVR
 dbpf "$(P)$(R=)$(S=:)Ena-Sel" "Enabled"
 
@@ -23,5 +21,3 @@ dbpf "$(P)$(R=)$(S=:)Time-I.INP" "@OBJ=$(OBJ=EVR), Code=$(EVT_PPS=125)"
 # Add proper ns calculation reference for the rf ticks
 dbpf "$(P)$(R=)$(S=:)Link-Clk-SP" "$(TS_CLK=88.0525)"
 dbpf "$(P)$(R=)$(S=:)Time-Clock-SP" "$(TS_CLK=88.0525)"
-
-#EOF

@@ -1,12 +1,10 @@
 # .template
 # WARNING: Not finished
 
-record(calcout, "$(P)$(R=)$(PV)") {
+record(calcout, "$(P)$(R=)$(S=:)$(PV)") {
   field(CALC, "A+B<<32")
-  field(INPA, "$(P)$(R=)dbus-u32indx$(INDEX0)-subA_ CPP")
-  field(INPB, "$(P)$(R=)dbus-u32indx$(INDEX1)-subA_ CPP")
+  field(INPA, "$(P)$(R=)$(S=:)dbus-u32indx$(INDEX0)-subA_ CPP")
+  field(INPB, "$(P)$(R=)$(S=:)dbus-u32indx$(INDEX1)-subA_ CPP")
   #field(PREC, "3") # only works if "caget -s SYS-D:Protocol-RB"
   field(SCAN, "Passive")
 }
-
-#EOL

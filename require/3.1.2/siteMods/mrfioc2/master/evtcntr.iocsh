@@ -1,0 +1,9 @@
+
+dbpf "$(P)$(R=)$(S=:)EvtA-SP.OUT" "@OBJ=$(OBJ=EVR),Code=$(EVTA)"
+dbpf "$(P)$(R=)$(S=:)EvtB-SP.OUT" "@OBJ=$(OBJ=EVR),Code=$(EVTB)"
+dbpf "$(P)$(R=)$(S=:)EvtC-SP.OUT" "@OBJ=$(OBJ=EVR),Code=$(EVTC)"
+dbpf "$(P)$(R=)$(S=:)EvtD-SP.OUT" "@OBJ=$(OBJ=EVR),Code=$(EVTD)"
+dbpf "$(P)$(R=)$(S=:)EvtE-SP.OUT" "@OBJ=$(OBJ=EVR),Code=$(EVTE)"
+dbpf "$(P)$(R=)$(S=:)EvtF-SP.OUT" "@OBJ=$(OBJ=EVR),Code=$(EVTF)"
+dbpf "$(P)$(R=)$(S=:)EvtG-SP.OUT" "@OBJ=$(OBJ=EVR),Code=$(EVTG)"
+dbpf "$(P)$(R=)$(S=:)EvtH-SP.OUT" "@OBJ=$(OBJ=EVR),Code=$(EVTH)"

@@ -1,6 +1,4 @@
-# .run.iocsh
-# ==========
-
+#!
 # Trigger embedded EVR U with the post-mortem upstream input event
 dbpf "$(P)$(R=)$(U=:EVRU-)DlyGen0-Evt-Trig0-SP" "$(EVT_PMORTEMI=41)"
 dbpf "$(P)$(R=)$(U=:EVRU-)DlyGen0-Width-SP" "1"
@@ -16,5 +14,3 @@ dbpf "$(P)$(R=)$(U=:EVRU-)OutFP1-Src-Pulse-SP" "Pulser 1"
 # Broadcast the data-on-demand event
 dbpf "$(P)$(R=)$(S=:)TrigEvt3-EvtCode-SP" "$(EVT_DOD=42)"
 dbpf "$(P)$(R=)$(S=:)TrigEvt3-TrigSrc-Cont-Sel" "Univ9"
-
-#EOF

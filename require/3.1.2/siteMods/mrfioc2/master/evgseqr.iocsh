@@ -1,6 +1,4 @@
-# .run.iocsh
-# ==========
-
+#!
 # Sequencer0 enable
 dbpf "$(P)$(R=)$(S=:)SoftSeq0-Disable-Cmd" "1"
 dbpf "$(P)$(R=)$(S=:)SoftSeq0-Load-Cmd" "1"
@@ -34,5 +32,3 @@ dbpf "$(P)$(R=)$(S=:)Mxc0-Prescaler-SP" "$(MXC_14HZ=6289464)"
 # EVT_14HZ as the cycle fiducial mark
 dbpf "$(P)$(R=)$(S=:)TrigEvt0-EvtCode-SP" "$(EVT_14HZ=14)"
 dbpf "$(P)$(R=)$(S=:)TrigEvt0-TrigSrc-Sel" "Mxc0"
-
-#EOF

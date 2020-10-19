@@ -1,6 +1,4 @@
-# .run.iocsh
-# ==========
-
+#!
 # Set EVM as master (EVG) and run sequences
 dbpf "$(P)$(R=)$(S=:)Enable-Sel" "Ena Master"
 # Select the RF input
@@ -22,5 +20,3 @@ dbpf "$(P)$(R=)$(S=:)Mxc7-Polarity-Sel" "Orginal"
 dbpf "$(P)$(R=)$(S=:)Mxc7-Prescaler-SP" "$(MXC_1HZ=88052500)"
 dbpf "$(P)$(R=)$(S=:)TrigEvt7-EvtCode-SP" "$(EVT_HBEAT=122)"
 dbpf "$(P)$(R=)$(S=:)TrigEvt7-TrigSrc-Sel" "Mxc7"
-
-#EOF
