@@ -1,0 +1,8 @@
+variable(iodebug)
+function(initEngine)
+function(ioEngine)
+variable(PscUs)
+device(stringout, CONSTANT, devStrOutCtrl, "ControlStrOut")
+registrar(cmdMapStrOut)
+function(ioASubBuf)
+device(stringin, INST_IO, devStrInFromStr, "ObjPropString")

@@ -1,0 +1,16 @@
+#!
+# Trigger embedded EVR U with the post-mortem upstream input event
+dbpf "$(P)$(R=)$(U=:EVRU-)DlyGen0-Evt-Trig0-SP" "$(EVT_PMORTEMI=41)"
+dbpf "$(P)$(R=)$(U=:EVRU-)DlyGen0-Width-SP" "1"
+dbpf "$(P)$(R=)$(U=:EVRU-)OutFP0-Src-Pulse-SP" "Pulser 0"
+# Broadcast the post-mortemevent
+dbpf "$(P)$(R=)$(S=:)TrigEvt2-EvtCode-SP" "$(EVT_PMORTEM=40)"
+dbpf "$(P)$(R=)$(S=:)TrigEvt2-TrigSrc-Cont-Sel" "Univ8"
+
+# Trigger embedded EVR U with the data-on-demand upstream input event
+dbpf "$(P)$(R=)$(U=:EVRU-)DlyGen1-Evt-Trig0-SP" "$(EVT_DODI=43)"
+dbpf "$(P)$(R=)$(U=:EVRU-)DlyGen1-Width-SP" "1"
+dbpf "$(P)$(R=)$(U=:EVRU-)OutFP1-Src-Pulse-SP" "Pulser 1"
+# Broadcast the data-on-demand event
+dbpf "$(P)$(R=)$(S=:)TrigEvt3-EvtCode-SP" "$(EVT_DOD=42)"
+dbpf "$(P)$(R=)$(S=:)TrigEvt3-TrigSrc-Cont-Sel" "Univ9"

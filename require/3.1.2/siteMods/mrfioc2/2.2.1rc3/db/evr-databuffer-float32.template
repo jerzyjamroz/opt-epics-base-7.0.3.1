@@ -1,0 +1,9 @@
+# .template
+
+record(ai, "$(P)$(R=)$(S=:)$(PV)") {
+  field(DTYP, "Raw Soft Channel")
+  field(INP, "$(P)$(R=)$(S=:)dbus-u32indx$(INDEX)-subA_ CPP")
+  #field(EGU, "ms")
+  field(LINR, "LINEAR")
+  field(ESLO, "0.000001") # raw
+}

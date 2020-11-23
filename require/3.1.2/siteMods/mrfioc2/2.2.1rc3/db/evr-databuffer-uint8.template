@@ -1,0 +1,7 @@
+# .template
+
+record(calcout, "$(P)$(R=)$(S=:)$(PV)") {
+  field(INPA, "$(P)$(R=)$(S=:)dbus-u32indx$(INDEX)-subA_ CPP")
+  field(SCAN, "Passive")
+  field(CALC, "(A>>($(OFFSET)*8))&255")
+}
