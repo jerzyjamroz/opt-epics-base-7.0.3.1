@@ -1,0 +1,31 @@
+record(stringout, "$(P)$(R=)$(S=:)ScTable-SP") {
+  field(DTYP, "ControlStrOut")
+  field(DESC, "Supercyle Table Name Setpoint")
+  field(PINI, "YES")
+  field(VAL,  "example-noCalib-2Hz-10000c.csv")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(stringout, "$(P)$(R=)$(S=:)PBState-SP") {
+  field(DTYP, "ControlStrOut")
+  field(DESC, "Proton Beam State")
+  field(PINI, "YES")
+  field(VAL,  "None")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(stringout, "$(P)$(R=)$(S=:)PBMod-SP") {
+  field(DTYP, "ControlStrOut")
+  field(DESC, "Proton Beam Mode")
+  field(PINI, "YES")
+  field(VAL,  "None")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(stringout, "$(P)$(R=)$(S=:)PBDest-SP") {
+  field(DTYP, "ControlStrOut")
+  field(DESC, "Proton Beam Destination")
+  field(PINI, "YES")
+  field(VAL,  "None")
+  info(autosaveFields_pass0, "VAL")
+}

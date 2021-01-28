@@ -1,0 +1,7 @@
+require "supercycleEngine" "1.0.0rc8"
+require "mrfioc2" "2.2.1rc3"
+epicsEnvSet "PEVG" "TD-M:Ctrl-EVG-1"
+epicsEnvSet "PSCE" "TD-M:Ctrl-SCE-1"
+epicsEnvSet "PCI_SLOT" "0e:00.0"
+epicsEnvSet "reftabs_DIR" "/opt/reftabs"
+epicsEnvSet "ASYNARGS" "EvtPMortem=40, EvtPMortemSys=41, EvtDoD=42, EvtDoDSys=43"
